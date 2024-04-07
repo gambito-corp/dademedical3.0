@@ -33,9 +33,6 @@ class Contrato extends Model
     public function archivos(){
         return $this->belongsToMany(Archivo::class, 'contrato_archivos');
     }
-//    public function archivos(){
-//        return $this->hasMany(Archivo::class);
-//    }
     public function usuariosRelacionados()
     {
         return $this->hasOne(ContratoUsuario::class);

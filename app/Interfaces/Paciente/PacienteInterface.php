@@ -12,7 +12,4 @@ interface PacienteInterface
     public function pacientesInactivos();
     public function pacientesPendientes();
     public function create(array $data): Paciente|Collection|null;
-//    public function allOnlyTrashed(): Collection;
-//    public function update(Paciente $paciente, array $data): Paciente|Collection|null;
-//    public function find($id): Paciente|Collection|null;
 }

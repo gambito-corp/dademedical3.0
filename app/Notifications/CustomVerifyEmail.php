@@ -42,7 +42,6 @@ class CustomVerifyEmail extends VerifyEmail
 
         return (new MailMessage)
             ->subject(Lang::get('Verifique la dirección de correo electrónico'))
-//            ->greeting($this->password) // añade la variable aquí
             ->line(Lang::get('Haga clic en el botón de abajo para verificar su dirección de correo electrónico.'))
             ->line('recuerde que su Contraseña es: '.$this->password)
             ->action(Lang::get('Verificar dirección de correo electrónico'), $actionUrl)

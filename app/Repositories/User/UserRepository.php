@@ -1,13 +1,12 @@
 <?php
 namespace App\Repositories\User;
+
 use App\Models\User;
 use Spatie\Permission\Models\Role;
-use App\Interfaces\User\UserRepositoryInterface;
+use App\Interfaces\User\UserInterface;
 use \Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
-class UserRepository implements UserRepositoryInterface
+class UserRepository implements UserInterface
 {
     protected User $user;
     public function __construct(User $user)
@@ -65,7 +64,7 @@ class UserRepository implements UserRepositoryInterface
             throw new \Error('Error en UserRepository::create: ' . $e->getMessage(), $e->getCode());
         }
     }
-    public function update(User $usuario, $data): User|null
+    public function update( $usuario, $data): User
     {
         $usuario->update(array_filter($data));
         return $usuario;

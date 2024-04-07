@@ -213,40 +213,11 @@ class User extends Component
             return throw new \Exception('Error en el Controlador de Usuarios de Livewire en el Metodo impersonateUser de Logs... URGENTE REVISION: '. $e->getMessage());
         }
 
-
-        //si hay una Sesion Impersonate en curso recuperamos el Usuario Original y lo guardamos en la variable $originalUser
         $originalUser = session()->has('impersonate') ? session('originalUser') : Auth::id();
-        // guardamos el id del usuario a suplantar en la variable $impersonate
-        $impersonate = $this->user->id;
-        // si hay una sesion impersonate agrego el id del usuario a suplantar al array impersonate en caso no haya sesion impersonate creo la sesion impersonate y guardo la variable $originalUser
-//        dd(session()->all());
         session()->has('impersonate') ? session()->push('impersonate', Auth::id()) : session(['impersonate' => [$originalUser]]);
-//        Por ultimo Reviso si existe la sesion original user, en caso negativo la creo y agrego el valor de la variable $originalUser
         session()->has('originalUser') ?: session(['originalUser' => $originalUser]);
-//        dd(session()->all());
-
-//        dd(session()->all());
         Auth::login($this->user);
         return redirect()->route('dashboard');
-
-//        try {
-//             $this->authService->impersonate($this->user);
-//             return redirect()->route('dashboard');
-//        } catch (\Throwable $th) {
-//            Log::channel('clear')->error(
-//                "Error en la suplantación del usuario {$this->user->name} en el método impersonateUser en el componente User de Livewire: {$th->getMessage()}"
-//            );
-////            $this->logService->create(
-////                entrypoint: 'Controlador User Livewire',
-////                message: "Error en la suplantación del usuario {$this->user->name} en el método impersonateUser en el componente User de Livewire: {$th->getMessage()}",
-////                stackTrace: $th->getTrace(),
-////                accion: 'Impersonate User',
-////                level: 'ERROR',
-////                comentario: 'Error en la suplantación del usuario'
-////
-////            );
-//             throw $th;
-//        }
     }
 
     public function render()

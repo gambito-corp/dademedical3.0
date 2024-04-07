@@ -1,25 +1,24 @@
 <?php
 namespace App\Services\User;
 
-use App\Interfaces\User\UserRepositoryInterface;
+use App\Interfaces\User\UserInterface;
 use App\Models\User;
 use App\Services\Logs\LogService;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 
 class UserServices
 {
     public Collection $usuarios; // Corregir la declaración de la propiedad $usuarios
-    protected UserRepositoryInterface $userRepository;
+    protected UserInterface $userRepository;
     protected LogService $logService;
     protected string $originalPassword;
     protected bool $randomPassword = false;
 
     public function __construct(
-        UserRepositoryInterface $userRepository,
-        LogService $logService
+        UserInterface $userRepository,
+        LogService    $logService
     )
     {
         $this->userRepository = $userRepository;

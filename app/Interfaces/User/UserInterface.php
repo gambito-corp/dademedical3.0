@@ -2,7 +2,7 @@
 namespace App\Interfaces\User;
 use App\Models\User;
 use \Illuminate\Database\Eloquent\Collection;
-interface UserRepositoryInterface
+interface UserInterface
 {
     public function find($id): Collection|User|null;
     public function findWithTrashed($id): Collection|User|null;

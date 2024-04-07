@@ -78,46 +78,6 @@ class CreateUserForm extends Form
         ];
     }
 
-//    public function save()
-//    {
-//        $this->validate();
-//        try {
-//            DB::beginTransaction();
-//            if($this->profile_photo_path){
-//                $this->profile_photo_path = $this->UserServices->storeProfilePhoto($this->profile_photo_path);
-//            }
-//            if($this->password == ''){
-//                $this->password = 'Dademedical24';
-//            }
-//            $data = $this->only([
-//                'name',
-//                'surname',
-//                'email',
-//                'username',
-//                'password',
-//                'role',
-//                'hospital',
-//                'profile_photo_path',
-//            ]);
-//            if(isset($data['role'])) {
-//                $data['rol'] = $data['role'];
-//                unset($data['role']);
-//            }
-//            if(isset($data['hospital'])) {
-//                $data['hospital_id'] = $data['hospital'];
-//                unset($data['hospital']);
-//            }
-//            $this->UserServices->create($data);
-//            $this->reset('name', 'surname', 'email', 'username', 'password', 'password_confirmation', 'profile_photo_path', 'role', 'hospital');
-//            DB::commit();
-//            return true;
-//        }catch (\Exception $e) {
-//            DB::rollBack();
-//            Log::error('Error en CreateUserForm::save: ' . $e->getMessage());
-//        }
-//        return false;
-//    }
-
     public function save()
     {
         $this->validate();

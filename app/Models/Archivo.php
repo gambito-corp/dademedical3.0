@@ -26,10 +26,6 @@ class Archivo extends Model
     /**
      * Get the contrato that owns the archivo.
      */
-//    public function contrato()
-//    {
-//        return $this->belongsTo(Contrato::class);
-//    }
     public function contratos(){
         return $this->belongsToMany(Contrato::class, 'contrato_archivos');
     }
