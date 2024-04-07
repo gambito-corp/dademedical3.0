@@ -11,6 +11,7 @@ use App\Repositories\Logs\LogsRepository;
 use App\Repositories\Paciente\PacienteRepository;
 use App\Repositories\User\UserRepository;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Fortify\Fortify;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,6 +25,8 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        //
+        Fortify::verifyEmailView(function (){
+            return view('auth.verify-email');
+        });
     }
 }

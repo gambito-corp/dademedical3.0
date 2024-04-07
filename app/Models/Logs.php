@@ -17,13 +17,8 @@ class Logs extends Model
         'ip_address',
         'url',
         'function',
-        'accion',
         'method',
         'message',
-        'level',
-        'context', // Asegúrate de que tu base de datos pueda almacenar este campo como JSON correctamente.
-        'comentario',
-        'strackTrace', // Corrige según sea necesario.
     ];
 
     /**

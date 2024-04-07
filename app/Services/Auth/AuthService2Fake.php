@@ -95,14 +95,7 @@ class AuthService2Fake
             Log::channel('clear')->error(
                 "Error en la suplantación del usuario {$user->name} en el método Impersonate en el Servicio AuthService2Fake: {$th->getMessage()}"
             );
-            $this->logService->create(
-                entrypoint: 'Servicio Auth',
-                message: "Error en la suplantación del usuario {$user->name} en el método Impersonate en el Servicio AuthService2Fake: {$th->getMessage()}",
-                stackTrace: $th->getTrace(),
-                accion: 'Impersonate User',
-                level: 'ERROR',
-                comentario: 'Error en la suplantación del usuario'
-            );
+
             throw $th;
         }
     }

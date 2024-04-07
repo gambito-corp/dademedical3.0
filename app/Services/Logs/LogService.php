@@ -18,11 +18,7 @@ class LogService
         $this->logRepository = $logRepository;
     }
 
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    public function create(string $entrypoint, string $message = '', array $stackTrace = [], string $accion = '', string $level = 'INFO', string $comentario = '')
+    public function create(string $entrypoint, string $message = '',)
     {
         try {
             $request = request();
@@ -34,13 +30,8 @@ class LogService
                 'ip_address' => $request->ip(),
                 'url' => $request->fullUrl(),
                 'function' => $entrypoint,
-                'accion' => $accion,
                 'method' => $request->method(),
                 'message' => $message,
-                'level' => $level,
-                'context' => json_encode($request->all()),
-                'comentario' => $comentario,
-                'strackTrace' => json_encode($stackTrace),
             ];
             return $this->logRepository->create(log: $log);
         } catch (\Exception $e) {

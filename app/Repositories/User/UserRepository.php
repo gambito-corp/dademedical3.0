@@ -58,7 +58,7 @@ class UserRepository implements UserRepositoryInterface
             $user = $this->user->create($usuario);
             $role = Role::query()->find($data['rol']);
             $user->assignRole($role);
-            return $this->user;
+            return $user;
         } catch (\Exception $e) {
             throw new \Exception('Error en UserRepository::create: ' . $e->getMessage(), $e->getCode());
         } catch (\Error $e) {

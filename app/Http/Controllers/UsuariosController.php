@@ -42,7 +42,7 @@ class UsuariosController extends Controller
         try {
             DB::beginTransaction();
             $this->userService->create($request->all());
-            $this->logService->create('Creacion Usuarios');
+//            $this->logService->create('Creacion Usuarios');
             DB::commit();
             DB::rollBack();
             session()->flash('alert', ['type' => 'success', 'message' => 'Operación realizada con éxito']);
@@ -144,7 +144,7 @@ class UsuariosController extends Controller
         try {
             DB::beginTransaction();
             $this->userService->update($usuario, $request->all());
-            $this->logService->create('Actualizacion Usuarios');
+//            $this->logService->create('Actualizacion Usuarios');
             DB::commit();
             session()->flash('alert', ['type' => 'success', 'message' => 'Operación realizada con éxito']);
             return redirect()->route('usuarios.index');

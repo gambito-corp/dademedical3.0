@@ -210,14 +210,6 @@ class User extends Component
         try {
 
         } catch (\Exception $e) {
-            $this->logService->create(
-                message: "Error en la suplantación del usuario {$this->user->name} en el método impersonateUser en el componente User de Livewire: {$e->getMessage()}",
-                stackTrace: $e->getTrace(),
-                accion: 'Impersonate User',
-                level: 'ERROR',
-                comentario: 'Error en la suplantación del usuario',
-                entrypoint: 'Controlador User Livewire',
-            );
             return throw new \Exception('Error en el Controlador de Usuarios de Livewire en el Metodo impersonateUser de Logs... URGENTE REVISION: '. $e->getMessage());
         }
 

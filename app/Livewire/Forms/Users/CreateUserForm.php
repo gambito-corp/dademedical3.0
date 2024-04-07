@@ -40,7 +40,7 @@ class CreateUserForm extends Form
         return [
             'name' => 'required|string|max:255',
             'surname' => 'required|string|max:255',
-            'password' => 'required|string|min:8|confirmed',
+            'password' => 'nullable|string|min:8|confirmed',
             'username' => 'required|string|max:255|unique:users,username',
             'email' => 'required|email|max:255|unique:users,email',
             'profile_photo_path' => 'nullable|image|max:1024',
@@ -78,12 +78,53 @@ class CreateUserForm extends Form
         ];
     }
 
+//    public function save()
+//    {
+//        $this->validate();
+//        try {
+//            DB::beginTransaction();
+//            if($this->profile_photo_path){
+//                $this->profile_photo_path = $this->UserServices->storeProfilePhoto($this->profile_photo_path);
+//            }
+//            if($this->password == ''){
+//                $this->password = 'Dademedical24';
+//            }
+//            $data = $this->only([
+//                'name',
+//                'surname',
+//                'email',
+//                'username',
+//                'password',
+//                'role',
+//                'hospital',
+//                'profile_photo_path',
+//            ]);
+//            if(isset($data['role'])) {
+//                $data['rol'] = $data['role'];
+//                unset($data['role']);
+//            }
+//            if(isset($data['hospital'])) {
+//                $data['hospital_id'] = $data['hospital'];
+//                unset($data['hospital']);
+//            }
+//            $this->UserServices->create($data);
+//            $this->reset('name', 'surname', 'email', 'username', 'password', 'password_confirmation', 'profile_photo_path', 'role', 'hospital');
+//            DB::commit();
+//            return true;
+//        }catch (\Exception $e) {
+//            DB::rollBack();
+//            Log::error('Error en CreateUserForm::save: ' . $e->getMessage());
+//        }
+//        return false;
+//    }
+
     public function save()
     {
         $this->validate();
+
         try {
             DB::beginTransaction();
-            $this->storeProfilePhoto();
+
             $data = $this->only([
                 'name',
                 'surname',
@@ -94,31 +135,19 @@ class CreateUserForm extends Form
                 'hospital',
                 'profile_photo_path',
             ]);
-            if(isset($data['role'])) {
-                $data['rol'] = $data['role'];
-                unset($data['role']);
-            }
-            if(isset($data['hospital'])) {
-                $data['hospital_id'] = $data['hospital'];
-                unset($data['hospital']);
-            }
+
             $this->UserServices->create($data);
+
             $this->reset('name', 'surname', 'email', 'username', 'password', 'password_confirmation', 'profile_photo_path', 'role', 'hospital');
+
             DB::commit();
+
             return true;
         }catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error en CreateUserForm::save: ' . $e->getMessage());
         }
-        return false;
-    }
 
-    private function storeProfilePhoto()
-    {
-        if ($this->profile_photo_path) {
-            $filename = time() . '_' . uniqid() . '.' . $this->profile_photo_path->getClientOriginalExtension();
-            $this->profile_photo_path->storeAs('',$filename, 'profile_photos');
-            $this->profile_photo_path = $filename;
-        }
+        return false;
     }
 }
