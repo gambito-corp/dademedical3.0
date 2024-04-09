@@ -94,6 +94,11 @@ class UserServices
 
     }
 
+    public function findWithTrashed(mixed $userId)
+    {
+        return $this->userRepository->findWithTrashed($userId);
+    }
+
     /**
      * @throws Exception
      */
@@ -171,4 +176,46 @@ class UserServices
         }
         $this->originalPassword = $data['password'];
     }
+
+    public function restore(int $userId)
+    {
+        $authUser = $this->find(id: Auth::id());
+        if(session()->has('originalUser'))
+        {
+            $authUser = $this->find(id: session('originalUser'));
+        }
+        try {
+            $this->userRepository->restore(id: $userId);
+            $this->logService->create(
+                entrypoint: self::class,
+                message: "El Usuario Fue Restaurado Por : $authUser->name $authUser->surname, el cual tiene el Nickname  de $authUser->username"
+            );
+            return true;
+        }catch (\Exception $e){
+            throw new Exception('Error en UserService::delete: ' . $e->getMessage(), 0);
+        }
+
+    }
+
+
+    public function forceDelete(int $userId)
+    {
+        $authUser = $this->find(id: Auth::id());
+        if(session()->has('originalUser'))
+        {
+            $authUser = $this->find(id: session('originalUser'));
+        }
+        try {
+            $this->userRepository->forceDelete(id: $userId);
+            $this->logService->create(
+                entrypoint: self::class,
+                message: "El Usuario Fue Eliminado Definitivamente Por : $authUser->name $authUser->surname, el cual tiene el Nickname  de $authUser->username"
+            );
+            return true;
+        }catch (\Exception $e){
+            throw new Exception('Error en UserService::delete: ' . $e->getMessage(), 0);
+        }
+
+    }
+
 }

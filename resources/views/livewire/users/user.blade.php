@@ -237,14 +237,14 @@
 
                                                                 <!-- Botón Restablecer Usuario -->
                                                                 @if($currentFilter == 'deleted')
-                                                                    <button title="Restablecer usuario" class="p-2 rounded bg-orange-500 text-white hover:bg-orange-600 focus:outline-none">
+                                                                    <button title="Restablecer usuario" class="p-2 rounded bg-orange-500 text-white hover:bg-orange-600 focus:outline-none" wire:click="openModal('restore', {{ $usuario->id }})">
                                                                         <i class="fas fa-recycle"></i>
                                                                     </button>
                                                                 @endif
 
                                                                 <!-- Botón Eliminar Permanentemente Usuario -->
                                                                 @if($currentFilter == 'deleted')
-                                                                    <button title="Eliminar permanentemente el usuario" class="p-2 rounded bg-gray-500 text-white hover:bg-gray-600 focus:outline-none">
+                                                                    <button title="Eliminar permanentemente el usuario" class="p-2 rounded bg-gray-500 text-white hover:bg-gray-600 focus:outline-none" wire:click="openModal('forceDelete', {{ $usuario->id }})">
                                                                         <i class="fas fa-times-circle"></i>
                                                                     </button>
                                                                 @endif
@@ -352,10 +352,50 @@
             </x-slot>
             <x-slot name="footer">
                 <x-button wire:click="closeModal('delete')" class="bg-blue-500 mr-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                    Eliminar
+                    Cancelar
                 </x-button>
 
                 <x-danger-button wire:click="delete()" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                    Eliminar
+                </x-danger-button>
+            </x-slot>
+        </x-dialog-modal>
+    @endif
+
+    @if($modalRestore)
+        <x-dialog-modal wire:model="modalRestore" :maxWidth="'sm'">
+            <x-slot name="title">
+                Impersonar al Usuario {{ $user->name }} {{ $user->surname }}
+            </x-slot>
+            <x-slot name="content">
+                Deseas Restaurar al Usuario {{ $user->name }} {{ $user->surname }}
+            </x-slot>
+            <x-slot name="footer">
+                <x-button wire:click="restore()" class="bg-blue-500 mr-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    Restaurar
+                </x-button>
+
+                <x-danger-button wire:click="closeModal('impersonate')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                    Cancelar
+                </x-danger-button>
+            </x-slot>
+        </x-dialog-modal>
+    @endif
+
+    @if($modalForceDelete)
+        <x-dialog-modal wire:model="modalForceDelete" :maxWidth="'sm'">
+            <x-slot name="title">
+                Borrar al Usuario {{ $user->name }} {{ $user->surname }}
+            </x-slot>
+            <x-slot name="content">
+                Deseas Eliminar al Usuario {{ $user->name }} {{ $user->surname }}, recuerda que esta es una accion de riesgo ya que la informacion de ese usuario podria perderse.
+            </x-slot>
+            <x-slot name="footer">
+                <x-button wire:click="closeModal('delete')" class="bg-blue-500 mr-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    Cancelar
+                </x-button>
+
+                <x-danger-button wire:click="forceDelete()" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
                     Eliminar
                 </x-danger-button>
             </x-slot>

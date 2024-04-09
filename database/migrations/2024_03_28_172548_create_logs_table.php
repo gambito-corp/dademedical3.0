@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('ip_address');
             $table->string('url');
             $table->string('function');
+            $table->string('accion');
             $table->string('method');
             $table->string('message');
             $table->string('level');
