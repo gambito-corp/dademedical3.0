@@ -3,48 +3,43 @@
 namespace App\Livewire\Components\Layout;
 
 //use App\Services\Logs\LogService;
+use App\Services\Auth\AuthService;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class NavBar extends Component
 {
 
-//    protected LogService $logService;
+    protected AuthService $authService;
+
+    public function boot(
+        AuthService $authService
+    )
+    {
+        $this->authService = $authService;
+    }
     protected $listeners = [
         'refresh-navigation-menu' => '$refresh',
     ];
 
-//    public function boot(LogService $logService)
-//    {
-//        $this->logService = $logService;
-//    }
-
-//$this->logService->create(
-//entrypoint: 'Servicio Auth',
-//message: "Error en la suplantación del usuario {$user->name} en el método Impersonate en el Servicio AuthService2Fake: {$th->getMessage()}",
-//stackTrace: $th->getTrace(),
-//                accion: 'Impersonate User',
-//                level: 'ERROR',
-//                comentario: 'Error en la suplantación del usuario'
-//            );
-//            throw $th;
-
-
     public function handlePreviousUserImpersonation()
     {
-        $impersonate = session('impersonate');
-        $user = array_pop($impersonate);
-        Auth::loginUsingId($user);
-        session(['impersonate' => $impersonate]);
+        try {
+            $this->authService->previousUserImpersonation();
+        }catch (\Exception $e){
+            return throw new \Exception('Error en el Controlador de NavBar de Livewire en el Metodo handlePreviousUserImpersonation: '. $e->getMessage());
+        }
         return redirect()->route('usuarios.index');
     }
 
     public function handleOriginalUserImpersonation()
     {
-        $originalUser = session('originalUser');
-        Auth::loginUsingId($originalUser);
-        session()->forget('impersonate');
-        session()->forget('originalUser');
+        try {
+            $this->authService->originalUserImpersonation();
+        }catch (\Exception $e)
+        {
+            return throw new \Exception('Error en el Controlador de NavBar de Livewire en el Metodo handleOriginalUserImpersonation: '. $e->getMessage());
+        }
         return redirect()->route('usuarios.index');
     }
 

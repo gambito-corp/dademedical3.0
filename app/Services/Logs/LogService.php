@@ -23,7 +23,7 @@ class LogService
         try {
             $request = request();
             $userId = Auth::id();
-            $originalUserId = session()->has('impersonate') ? session()->get('impersonate') : $userId;
+            $originalUserId = session()->has('originalUser') ? session()->get('originalUser') : $userId;
             $log = [
                 'user_id' => $userId,
                 'original_user_id' => $originalUserId,
@@ -35,6 +35,7 @@ class LogService
             ];
             return $this->logRepository->create(log: $log);
         } catch (\Exception $e) {
+            dd($e->getMessage());
             Log::channel('clear')->error('Error en el Servicio de Logs... URGENTE REVISION: '. $e->getMessage());
             throw new \Exception('Error en el Servicio de Logs... URGENTE REVISION: '. $e->getMessage());
         }

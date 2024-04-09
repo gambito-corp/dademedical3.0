@@ -3,9 +3,11 @@ namespace App\Services\User;
 
 use App\Interfaces\User\UserInterface;
 use App\Models\User;
+use App\Services\Auth\AuthService;
 use App\Services\Logs\LogService;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class UserServices
@@ -18,7 +20,7 @@ class UserServices
 
     public function __construct(
         UserInterface $userRepository,
-        LogService    $logService
+        LogService    $logService,
     )
     {
         $this->userRepository = $userRepository;
@@ -40,20 +42,14 @@ class UserServices
         return $this->userRepository->allOnlyTrashed();
     }
 
-    private function createUser($data){
-        try {
-            return $this->userRepository->create($data);
-        } catch (Exception $e) {
-            throw new Exception('Error en UserService::createUser: ' . $e->getMessage(), 0);
-        }
-    }
-
     /**
      * @throws Exception
      */
     public function create(array $data): User|Collection|null
     {
+        $this->manageRelatedData($data);
         $this->manageProfileData($data);
+        $this->managePasswordData($data);
 
         $user = $this->createUser($data);
         if (!$user) {
@@ -62,12 +58,40 @@ class UserServices
 
         $this->sendEmailToUser($user);
 
+
+        $authUser = $this->find(id: Auth::id());
+        if(session()->has('originalUser'))
+        {
+            $authUser = $this->find(id: session('originalUser'));
+        }
+
+
         $this->logService->create(
             entrypoint: self::class,
-            message: 'El Usuario Fue Creado Por : '
+            message: "El Usuario Fue Eliminado Por : $user->name $user->surname, el cual tiene el Nickname  de $user->username"
         );
 
         return $user;
+    }
+
+    public function delete(int $userId)
+    {
+        $authUser = $this->find(id: Auth::id());
+        if(session()->has('originalUser'))
+        {
+            $authUser = $this->find(id: session('originalUser'));
+        }
+        try {
+            $this->userRepository->delete(id: $userId);
+            $this->logService->create(
+                entrypoint: self::class,
+                message: "El Usuario Fue Eliminado Por : $authUser->name $authUser->surname, el cual tiene el Nickname  de $authUser->username"
+            );
+            return true;
+        }catch (\Exception $e){
+            throw new Exception('Error en UserService::delete: ' . $e->getMessage(), 0);
+        }
+
     }
 
     /**
@@ -76,9 +100,26 @@ class UserServices
     public function update(User $usuario, array $data): User|Collection|null
     {
         try {
+            $this->manageRelatedData($data);
             return $this->userRepository->update($usuario, $data);
         } catch (Exception $e) {
-            throw new Exception('Error en CrudService::update: ' . $e->getMessage(), 0);
+            throw new Exception('Error en UserService::update: ' . $e->getMessage(), 0);
+        }
+    }
+
+    private function createUser($data){
+        try {
+            return $this->userRepository->create($data);
+        } catch (Exception $e) {
+            throw new Exception('Error en UserService::createUser: ' . $e->getMessage(), 0);
+        }
+    }
+    private function updatedUser(User $usuario, array $data)
+    {
+        try {
+            return $this->userRepository->update($usuario, $data);
+        } catch (Exception $e) {
+            throw new Exception('Error en UserService::createUser: ' . $e->getMessage(), 0);
         }
     }
 
@@ -110,10 +151,9 @@ class UserServices
         if($data['profile_photo_path']){
             $data['profile_photo_path'] = $this->storeProfilePhoto($data['profile_photo_path']);
         }
-        if(empty($data['password'])){
-            $data['password'] = Str::random(8);
-        }
-        $this->originalPassword = $data['password'];
+    }
+    private function manageRelatedData(array &$data)
+    {
         if(isset($data['role'])) {
             $data['rol'] = $data['role'];
             unset($data['role']);
@@ -124,5 +164,11 @@ class UserServices
         }
     }
 
-
+    private function managePasswordData(array &$data)
+    {
+        if(empty($data['password'])){
+            $data['password'] = Str::random(8);
+        }
+        $this->originalPassword = $data['password'];
+    }
 }

@@ -12,7 +12,7 @@ class Hospital extends Model
 
     protected $fillable = ['nombre', 'acronimo', 'direccion', 'parent_id', 'estado'];
 
-    protected $appends = ['parent'];
+//    protected $appends = ['parent'];
 
     public function parent()
     {

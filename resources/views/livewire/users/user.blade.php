@@ -212,12 +212,12 @@
 
                                                             <div class="flex items-center space-x-1">
                                                                 <!-- Botón Editar Usuario -->
-                                                                <button title="Editar usuario" class="p-2 rounded bg-blue-500 text-white hover:bg-blue-600 focus:outline-none">
+                                                                <button title="Editar usuario" class="p-2 rounded bg-blue-500 text-white hover:bg-blue-600 focus:outline-none"  wire:click="openModal('edit', {{ $usuario->id }})">
                                                                     <i class="fas fa-edit"></i>
                                                                 </button>
 
                                                                 <!-- Botón Mostrar Usuario -->
-                                                                <button title="Mostrar usuario" class="p-2 rounded bg-green-500 text-white hover:bg-green-600 focus:outline-none">
+                                                                <button title="Mostrar usuario" class="p-2 rounded bg-green-500 text-white hover:bg-green-600 focus:outline-none" wire:click="openModal('show', {{$usuario->id}})">
                                                                     <i class="fas fa-eye"></i>
                                                                 </button>
 
@@ -230,7 +230,7 @@
 
                                                                 <!-- Botón Borrar Usuario -->
                                                                 @if($currentFilter != 'deleted')
-                                                                    <button title="Borrar usuario" class="p-2 rounded bg-red-500 text-white hover:bg-red-600 focus:outline-none">
+                                                                    <button title="Borrar usuario" class="p-2 rounded bg-red-500 text-white hover:bg-red-600 focus:outline-none" wire:click="openModal('delete',{{$usuario->id}})">
                                                                         <i class="fas fa-trash-alt"></i>
                                                                     </button>
                                                                 @endif
@@ -289,6 +289,38 @@
         </x-dialog-modal>
     @endif
 
+    @if($modalEdit)
+        <x-dialog-modal wire:model="modalEdit" :maxWidth="'full'">
+            <x-slot name="title">
+                Editar Usuario
+            </x-slot>
+
+            <x-slot name="content">
+                <livewire:users.edit-user :user="$user"/>
+            </x-slot>
+
+            <x-slot name="footer">
+
+            </x-slot>
+        </x-dialog-modal>
+    @endif
+
+    @if($modalShow)
+        <x-dialog-modal wire:model="modalShow" :maxWidth="'full'">
+            <x-slot name="title">
+                Mostar Usuario
+            </x-slot>
+
+            <x-slot name="content">
+                <livewire:users.user-show :user="$user"/>
+            </x-slot>
+
+            <x-slot name="footer">
+
+            </x-slot>
+        </x-dialog-modal>
+    @endif
+
     @if($modalImpersonate)
         <x-dialog-modal wire:model="modalImpersonate" :maxWidth="'sm'">
             <x-slot name="title">
@@ -305,6 +337,26 @@
 
                 <x-danger-button wire:click="closeModal('impersonate')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
                     Cancelar
+                </x-danger-button>
+            </x-slot>
+        </x-dialog-modal>
+    @endif
+
+    @if($modalDelete)
+        <x-dialog-modal wire:model="modalDelete" :maxWidth="'sm'">
+            <x-slot name="title">
+               Borrar al Usuario {{ $user->name }} {{ $user->surname }}
+            </x-slot>
+            <x-slot name="content">
+                Deseas Borrar al Usuario {{ $user->name }} {{ $user->surname }}, recuerda que esta es una accion de riesgo ya que la informacion de ese usuario podria perderse.
+            </x-slot>
+            <x-slot name="footer">
+                <x-button wire:click="closeModal('delete')" class="bg-blue-500 mr-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    Eliminar
+                </x-button>
+
+                <x-danger-button wire:click="delete()" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                    Eliminar
                 </x-danger-button>
             </x-slot>
         </x-dialog-modal>

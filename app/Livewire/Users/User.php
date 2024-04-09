@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Users;
 
-//use App\Services\Auth\AuthService2Fake;
+use App\Services\Auth\AuthService;
 use App\Services\Logs\LogService;
 use App\Services\User\UserServices;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -19,8 +19,7 @@ class User extends Component
     use WithPagination;
 
     protected UserServices $userService;
-    protected LogService $logService;
-//    protected AuthService2Fake $authService;
+    protected AuthService $authService;
 
     //objetos y colecciones
     public $usuarios;
@@ -30,6 +29,7 @@ class User extends Component
     public string $currentFilter = 'active';
     public bool $modalCreate = false;
     public bool $modalEdit = false;
+    public bool $modalShow = false;
     public bool $modalImpersonate;
 
     public bool $modalDelete = false;
@@ -46,13 +46,11 @@ class User extends Component
 
     public function boot(
         UserServices $userService,
-//        LogService $logService,
-//        AuthService2Fake $authService
+        AuthService $authService
     )
     {
         $this->userService = $userService;
-//        $this->logService = $logService;
-//        $this->authService = $authService;
+        $this->authService = $authService;
     }
 
     public function mount()
@@ -167,6 +165,7 @@ class User extends Component
         match ($type) {
             'create' => $this->modalCreate = true,
             'edit' => $this->modalEdit = true,
+            'show' => $this->modalShow = true,
             'impersonate' => $this->modalImpersonate = true,
             'delete' => $this->modalDelete = true,
             'restore' => $this->modalRestore = true,
@@ -178,6 +177,7 @@ class User extends Component
     {
         $this->modalCreate = false;
         $this->modalEdit = false;
+        $this->modalShow = false;
         $this->modalImpersonate = false;
         $this->modalDelete = false;
         $this->modalRestore = false;
@@ -191,40 +191,34 @@ class User extends Component
         }
 
         match ($type) {
-            'create' => $this->closeCreate(),
+            'create' => $this->modalCreate = false,
             'edit' => $this->modalEdit = false,
+            'show' => $this->modalShow = false,
             'impersonate' => $this->modalImpersonate = false,
             'delete' => $this->modalDelete = false,
             'restore' => $this->modalRestore = false,
         };
-    }
-
-    public function closeCreate()
-    {
-        $this->modalCreate = false;
+        return redirect()->route('usuarios.index');
     }
 
     public function impersonateUser()
     {
-
         try {
-
+            $this->authService->ImpersonateUser(usuario: $this->user);
         } catch (\Exception $e) {
-            return throw new \Exception('Error en el Controlador de Usuarios de Livewire en el Metodo impersonateUser de Logs... URGENTE REVISION: '. $e->getMessage());
+            return throw new \Exception('Error en el Controlador de Usuarios de Livewire en el Metodo impersonateUser: '. $e->getMessage());
         }
-
-        $originalUser = session()->has('impersonate') ? session('originalUser') : Auth::id();
-        session()->has('impersonate') ? session()->push('impersonate', Auth::id()) : session(['impersonate' => [$originalUser]]);
-        session()->has('originalUser') ?: session(['originalUser' => $originalUser]);
-        Auth::login($this->user);
         return redirect()->route('dashboard');
     }
 
-    public function render()
+    public function delete()
     {
-        $usuariosFiltrados = $this->filterSearch($this->usuarios);
-        $data = $this->paginateData($usuariosFiltrados);
-        return view('livewire.users.user', compact('data'));
+        try {
+            $this->userService->delete(userId: $this->user->id);
+        } catch (\Exception $e) {
+            return throw new \Exception('Error en el Controlador de Usuarios de Livewire en el Metodo delete: '. $e->getMessage());
+        }
+        $this->dispatch('closeModal', 'delete', $this->user->id);
     }
 
     private function paginateData($usuarios)
@@ -242,5 +236,12 @@ class User extends Component
     private function sliceDataForPage($data, $page, $perPage)
     {
         return $data->slice(($page - 1) * $perPage, $perPage)->all();
+    }
+
+    public function render()
+    {
+        $usuariosFiltrados = $this->filterSearch($this->usuarios);
+        $data = $this->paginateData($usuariosFiltrados);
+        return view('livewire.users.user', compact('data'));
     }
 }
