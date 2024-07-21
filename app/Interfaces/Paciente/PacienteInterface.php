@@ -7,9 +7,14 @@ use Illuminate\Support\Collection;
 
 interface PacienteInterface
 {
-    public function all();
-    public function pacientesActivos();
-    public function pacientesInactivos();
-    public function pacientesPendientes();
+    public function query($orderColumn = 'id', $orderDirection = 'desc');
+    public function find($id): Paciente|Collection|null;
+    public function findWithTrashed($id): Paciente|Collection|null;
+    public function all(): Collection;
+    public function pacientesActivos() : Collection;
+    public function pacientesInactivos() : Collection;
+    public function pacientesPendientes() : Collection;
+    public function allWithTrashed(): Collection;
+    public function allOnlyTrashed(): Collection;
     public function create(array $data): Paciente|Collection|null;
 }

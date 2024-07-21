@@ -4,6 +4,7 @@ use App\Models\User;
 use \Illuminate\Database\Eloquent\Collection;
 interface UserInterface
 {
+    public function query($orderColumn = 'id', $orderDirection = 'desc');
     public function find($id): Collection|User|null;
     public function findWithTrashed($id): Collection|User|null;
     public function all(): Collection;

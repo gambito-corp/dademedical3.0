@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property $user_id
@@ -17,7 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  * */
 class Paciente extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     const ORIGEN = [
         '1' => 'nulo',
@@ -49,9 +50,4 @@ class Paciente extends Model
     {
         return $this->hasOne(Contrato::class)->latest('id');
     }
-
-    public function hospital(){
-        return $this->belongsToThrough(Hospital::class, User::class);
-    }
-
 }

@@ -66,40 +66,25 @@ class User extends Authenticatable
     {
         return $this->email_verified_at ? 'Si esta Verificado' : 'Falta Verificar';
     }
-    /*SCOPE*/
-    public function scopeActivos($query)
-    {
-        return $query;
-    }
-    public function scopeInactivos($query)
-    {
-        return $query->onlyTrashed();
-    }
-    public function scopeSearchByName($query, $name)
-    {
-        if ($name) {
-            return $query->where('name', 'like', '%'.$name.'%');
-        }
 
-        return $query;
-    }
-    public function scopeSearchByEmail($query, $email)
+    /*SCOPES*/
+    public function scopeActive($query)
     {
-        if ($email) {
-            return $query->where('email', 'like', '%'.$email.'%');
-        }
-
-        return $query;
+        return $query->whereNotNull('email_verified_at');
     }
-    public function scopeSearchByRole($query, $role)
-    {
-        if ($role) {
-            return $query->whereHas('roles', function ($subquery) use ($role) {
-                $subquery->where('name', 'like', '%'.$role.'%');
-            });
-        }
 
-        return $query;
+    public function scopeInactive($query)
+    {
+        return $query->whereNull('email_verified_at');
+    }
+
+    public function scopeSearch($query, $search)
+    {
+        return $query->where(function ($q) use ($search) {
+            $q->where('name', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%")
+                ->orWhere('username', 'like', "%{$search}%");
+        });
     }
     /*RELACIONES*/
 

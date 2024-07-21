@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Livewire\Patients\Patient;
 use App\Livewire\Users\User;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
@@ -21,6 +22,7 @@ Route::get('/reset-password/{token}', NewPasswordController::class)
 Route::middleware(['auth', 'verified', 'web'])->group(function () {
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
     Route::get('/users', User::class)->name('usuarios.index');
+    Route::get('/patients', Patient::class)->name('patients.index');
 });
 
 // Rutas de verificación de correo electrónico.

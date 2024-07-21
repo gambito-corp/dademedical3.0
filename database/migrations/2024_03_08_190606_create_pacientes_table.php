@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('origen');
             $table->string('active');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -118,4 +118,6 @@ class PermissionsSeeder extends Seeder
             $usuario->assignRole('Medicos');
         }
     }
+
+//    pacientes->medicos->hospitales->Gerencia->Administrador->Dueño
 }

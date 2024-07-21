@@ -2,44 +2,42 @@
 
 namespace App\Livewire\Users;
 
+use App\Livewire\BaseComponent as Component;
 use App\Services\Auth\AuthService;
 use App\Services\User\UserServices;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Livewire\Attributes\On;
-use Livewire\Component;
-use Livewire\WithPagination;
 
 class User extends Component
 {
-    use WithPagination;
-    // Inyección de dependencias y propiedades protegidas
     protected UserServices $userService;
     protected AuthService $authService;
-    // Propiedades públicas: objetos, colecciones, y primitivas
     public $usuarios, $user;
-    public string $currentFilter = 'active', $search = '', $selectedTypeSearch = 'Nombre', $orderColumn = 'id', $orderDirection = 'desc';
-    public bool $modalCreate = false, $modalEdit = false, $modalShow = false, $modalImpersonate = false, $modalDelete = false, $modalRestore = false, $modalForceDelete = false, $showDropdown = false, $showDropdownTypeSearch = false;
-    public int $paginate = 10;
-    public array $paginacion = [10,15,20,25,30,35,40,45,50,60,70,80,90,100,200,300,400,500,1000], $typeSearch = ['name' => 'Nombre', 'email' => 'Correo', 'username' => 'Usuario', 'role' => 'Rol', 'hospital' => 'Hospital'];
-    // Métodos del ciclo de vida del componente
-    public function boot(UserServices $userService, AuthService $authService)
+    public bool $modalCreate = false, $modalEdit = false, $modalShow = false, $modalDelete = false, $modalImpersonate = false, $modalRestore = false;
+     public function boot(UserServices $userService, AuthService $authService) : void
     {
         $this->userService = $userService;
         $this->authService = $authService;
     }
-    public function mount()
+    public function mount() : void
     {
-        $this->changeUsers('active');
+        $this->filter = 'active';
     }
-    // Métodos para la gestión de usuarios
+    public function render()
+    {
+        $data = $this->loadUser();
+        return view('livewire.users.user', compact('data'));
+    }
     public function changeUsers(string $title)
     {
         $this->currentFilter = $title;
-        $this->usuarios = match ($title) {
-            'active' => $this->userService->usuariosActivos(),
-            'inactive' => $this->userService->usuariosInactivos(),
-            'deleted' => $this->userService->allOnlyTrashed(),
-        };
+        $this->filter = $title;
+        $this->resetPage();
+    }
+    public function loadUser()
+    {
+        return $this->userService->getUsers(
+            $this->search, $this->filter, $this->orderColumn, $this->orderDirection, $this->paginate
+        );
     }
     public function canImpersonate($targetUser)
     {
@@ -77,7 +75,7 @@ class User extends Component
         try {
             $this->authService->ImpersonateUser(usuario: $this->user);
         } catch (\Exception $e) {
-            return throw new \Exception('Error en el Controlador de Usuarios de Livewire en el Metodo impersonateUser: '. $e->getMessage());
+            throw new \Exception('Error en el Controlador de Usuarios de Livewire en el Metodo impersonateUser: ' . $e->getMessage());
         }
         return redirect()->route('dashboard');
     }
@@ -86,7 +84,7 @@ class User extends Component
         try {
             $this->userService->delete(userId: $this->user->id);
         } catch (\Exception $e) {
-            throw new \Exception('Error en el Controlador de Usuarios de Livewire en el Metodo delete: '. $e->getMessage());
+            throw new \Exception('Error en el Controlador de Usuarios de Livewire en el Metodo delete: ' . $e->getMessage());
         }
         $this->dispatch('closeModal', 'delete', $this->user->id);
     }
@@ -95,73 +93,15 @@ class User extends Component
         try {
             $this->userService->restore($this->user->id);
         } catch (\Exception $e) {
-            throw new \Exception('Error en el Controlador de Usuarios de Livewire en el Metodo restore: '. $e->getMessage());
+            throw new \Exception('Error en el Controlador de Usuarios de Livewire en el Metodo restore: ' . $e->getMessage());
         }
         $this->dispatch('closeModal', 'restore', $this->user->id);
     }
-    public function forceDelete(): void
-    {
-        try {
-            $this->userService->forceDelete($this->user->id);
-        } catch (\Exception $e) {
-            throw new \Exception('Error en el Controlador de Usuarios de Livewire en el Metodo forceDelete: '. $e->getMessage());
-        }
-        $this->modalForceDelete = false;
-    }
-    // Métodos auxiliares privados
-    private function standarTypeSearch(): string
-    {
-        return match ($this->selectedTypeSearch) {
-            'Correo' => 'email',
-            'Usuario' => 'username',
-            'Rol' => 'role',
-            'Hospital' => 'hospital',
-            default => 'name',
-        };
-    }
-    private function filterSearch($usuarios)
-    {
-        return $usuarios->filter(function ($user) {
-            $result = '';
-            if($this->selectedTypeSearch == 'Rol')
-            {
-                foreach ($user->roles as $role)
-                {
-                    $result .= $role->name;
-                }
-                return str_contains(strtolower($result), strtolower($this->search));
-            }
-
-            if($this->selectedTypeSearch == 'Hospital')
-            {
-                return str_contains(strtolower($user->hospital->name), strtolower($this->search)) ||
-                    str_contains(strtolower($user->hospital->acronimo), strtolower($this->search));
-            }
-            return str_contains(strtolower($user->{$this->standarTypeSearch()}), strtolower($this->search));
-        });
-    }
-    private function paginateData($usuarios)
-    {
-        $page = LengthAwarePaginator::resolveCurrentPage();
-        $perPage = $this->paginate;
-        $total = $usuarios->count();
-        $results = $this->sliceDataForPage($usuarios, $page, $perPage);
-
-        return new LengthAwarePaginator($results, $total, $perPage, $page, [
-            'path' => LengthAwarePaginator::resolveCurrentPath(),
-        ]);
-    }
-    private function sliceDataForPage($data, $page, $perPage)
-    {
-        return $data->slice(($page - 1) * $perPage, $perPage)->all();
-    }
-    // Métodos para la gestión de modales
-    public function openModal(string $type, $userId = null)
+    public function openModal(string $type, $userId = null):void
     {
         if ($userId !== null) {
             $this->user = $this->userService->findWithTrashed($userId);
         }
-//        dd('user: ', $this->user, $type);
 
         $this->resetModals();
 
@@ -172,7 +112,6 @@ class User extends Component
             'impersonate' => $this->modalImpersonate = true,
             'delete' => $this->modalDelete = true,
             'restore' => $this->modalRestore = true,
-            'forceDelete' => $this->modalForceDelete = true,
             default => null,
         };
     }
@@ -190,10 +129,8 @@ class User extends Component
             'impersonate' => $this->modalImpersonate = false,
             'delete' => $this->modalDelete = false,
             'restore' => $this->modalRestore = false,
-            'forceDelete' => $this->modalForceDelete = false,
             default => null,
         };
-        return redirect()->route('usuarios.index');
     }
     private function resetModals()
     {
@@ -203,32 +140,5 @@ class User extends Component
         $this->modalImpersonate = false;
         $this->modalDelete = false;
         $this->modalRestore = false;
-        $this->modalForceDelete = false;
-    }
-    // Métodos para mostrar y ocultar dropdowns
-    public function showPagination()
-    {
-        $this->showDropdown = !$this->showDropdown;
-    }
-    public function showTypeSearch()
-    {
-        $this->showDropdownTypeSearch = !$this->showDropdownTypeSearch;
-    }
-    public function selectedPaginate($paginate)
-    {
-        $this->paginate = $paginate;
-        $this->showDropdown = false;
-    }
-    public function selectedTypeSearchComponent($type)
-    {
-        $this->selectedTypeSearch = $type;
-        $this->showDropdownTypeSearch = false;
-    }
-    // Método de renderizado
-    public function render()
-    {
-        $usuariosFiltrados = $this->filterSearch($this->usuarios);
-        $data = $this->paginateData($usuariosFiltrados);
-        return view('livewire.users.user', compact('data'));
     }
 }

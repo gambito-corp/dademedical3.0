@@ -1,7 +1,13 @@
 @php
     $nav_links = [
         ['name' => 'Dashboard', 'route' => 'dashboard', 'active' => request()->routeIs('dashboard')],
-        ['name' => 'users.Users', 'route' => 'usuarios.index', 'active' => request()->routeIs('usuarios.*')]
+        ['name' => 'users.Users', 'route' => 'usuarios.index', 'active' => request()->routeIs('usuarios.*')],
+        ['name' => 'patient.Patients', 'route' => 'patients.index', 'active' => request()->routeIs('pacientes.*')],
+//        ['name' => 'appointment.Appointments', 'route' => 'citas.index', 'active' => request()->routeIs('citas.*')],
+//        ['name' => 'report.Report', 'route' => 'reportes.index', 'active' => request()->routeIs('reportes.*')],
+//        ['name' => 'settings.Settings', 'route' => 'configuracion', 'active' => request()->routeIs('configuracion')],
+//        ['name' => 'help.Help', 'route' => 'ayuda', 'active' => request()->routeIs('ayuda')],
+//        ['name' => 'about.About', 'route' => 'acerca', 'active' => request()->routeIs('acerca')],
     ];
 @endphp
 

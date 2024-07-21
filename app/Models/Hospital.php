@@ -26,9 +26,4 @@ class Hospital extends Model
     {
         return $this->hasMany(User::class, 'hospital_id');
     }
-
-    public function pacientes()
-    {
-        return $this->hasManyThrough(Paciente::class, User::class, 'hospital_id', 'user_id');
-    }
 }

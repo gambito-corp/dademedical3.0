@@ -2,17 +2,32 @@
 namespace App\Repositories\User;
 
 use App\Models\User;
+use Exception;
 use Spatie\Permission\Models\Role;
 use App\Interfaces\User\UserInterface;
 use \Illuminate\Database\Eloquent\Collection;
 
 class UserRepository implements UserInterface
 {
-    protected User $user;
-    public function __construct(User $user)
+    public function __construct(protected User $user){}
+    public function query($orderColumn = 'id', $orderDirection = 'desc')
     {
-        $this->user = $user;
+        $query = $this->user->newQuery();
+
+        if ($orderColumn === 'roles') {
+            $query->join('model_has_roles', 'model_has_roles.model_id', '=', 'users.id')
+                ->join('roles', 'roles.id', '=', 'model_has_roles.role_id')
+                ->orderBy('roles.name', $orderDirection)
+                ->select('users.*');
+        } else {
+            $query->orderBy($orderColumn, $orderDirection);
+        }
+
+        return $query;
     }
+
+
+
     public function find($id): Collection|User|null
     {
         return $this->user->find($id);
@@ -80,9 +95,37 @@ class UserRepository implements UserInterface
         $user = $this->find($id);
         $user->delete();
     }
+
+    /**
+     * @throws Exception
+     */
     public function forceDelete($id): void
     {
-        $user = $this->findWithTrashed($id);
-        $user->forceDelete();
+        try {
+            $user = User::query()
+                ->withTrashed()
+                ->with([
+                    'Logs',
+                    'paciente',
+                    'contratosSolicitados',
+                    'contratosAprobados',
+                    'contratosBajados',
+                    'contratosFinalizados'
+                ])
+                ->where('id', $id)
+                ->firstOrFail();
+            $user->logs()->forceDelete();
+            $user->paciente()->forceDelete();
+            $user->contratosSolicitados()->forceDelete();
+            $user->contratosAprobados()->forceDelete();
+            $user->contratosBajados()->forceDelete();
+            $user->contratosFinalizados()->forceDelete();
+
+            $user->forceDelete();
+        } catch (Exception $e) {
+            throw new Exception('Error en UserRepository::forceDelete: ' . $e->getMessage(), 0, $e);
+        } catch (\Error $e) {
+            throw new \Error('Error en UserRepository::forceDelete: ' . $e->getMessage(), 0, $e);
+        }
     }
 }

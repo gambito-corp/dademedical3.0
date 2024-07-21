@@ -1,18 +1,39 @@
 <?php
-
 namespace App\Services\Paciente;
 
 use App\Interfaces\Paciente\PacienteInterface;
+use App\Services\Logs\LogService;
 use Illuminate\Database\Eloquent\Collection;
 
 class PacienteService
 {
     public Collection $pacientes;
-    protected $pacienteRepository;
 
-    public function __construct(PacienteInterface $pacienteRepository)
+    public function __construct(protected PacienteInterface $pacienteRepository, protected LogService $logService){}
+
+    public function getPatients(string $search, string $filter, string $orderColumn, string $orderDirection, int $paginate)
     {
-        $this->pacienteRepository = $pacienteRepository;
+        $query = $this->pacienteRepository->query($orderColumn, $orderDirection);
+
+        $query = match ($filter) {
+            'active' => $query->whereNull('pacientes.deleted_at'),
+            'inactive' => $query->onlyTrashed(),
+            default => $query,
+        };
+
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->whereRaw('CONCAT(pacientes.name, " ", pacientes.surname) like ?', ["%{$search}%"])
+                    ->orWhere('dni', 'like', "%{$search}%")
+                    ->orWhereHas('user', function($q) use ($search) {
+                        $q->whereHas('hospital', function($q) use ($search) {
+                            $q->where('nombre', 'like', "%{$search}%");
+                        });
+                    });
+            });
+        }
+
+        return $query->paginate($paginate);
     }
 
     public function all()
@@ -34,13 +55,14 @@ class PacienteService
     {
         return $this->pacienteRepository->pacientesPendientes();
     }
+
     public function create(array $data): Collection
     {
         return $this->pacienteRepository->create($data);
     }
+
     public function checkReniec()
     {
         return 'Toca Pelotas';
     }
-
 }
