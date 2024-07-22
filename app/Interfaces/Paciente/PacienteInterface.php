@@ -17,4 +17,6 @@ interface PacienteInterface
     public function allWithTrashed(): Collection;
     public function allOnlyTrashed(): Collection;
     public function create(array $data): Paciente|Collection|null;
+
+    public function checkReniec($dni);
 }

@@ -36,12 +36,9 @@ class CreateUser extends Component
         return view('livewire.users.create-user');
     }
 
-    /**
-     * @throws \Exception
-     */
     public function save()
     {
-        $save = $this->usuario->save();
+        $this->usuario->save();
         $this->reset('usuario');
         $this->dispatch('closeModal', 'create');
     }

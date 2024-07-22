@@ -173,4 +173,78 @@
         </div>
     </div>
 
+    @if($modalCreate)
+        <x-dialog-modal wire:model="modalCreate" :maxWidth="'full'">
+            <x-slot name="title">
+                Ingresar Nuevo Paciente
+            </x-slot>
+            <x-slot name="content">
+                <livewire:patients.create-patient />
+            </x-slot>
+            <x-slot name="footer"></x-slot>
+        </x-dialog-modal>
+    @endif
+
+    @if($modalEdit)
+        <x-dialog-modal wire:model="modalEdit" :maxWidth="'full'">
+            <x-slot name="title">
+                Editar Usuario
+            </x-slot>
+            <x-slot name="content">
+                <livewire:users.edit-user :user="$user"/>
+            </x-slot>
+            <x-slot name="footer"></x-slot>
+        </x-dialog-modal>
+    @endif
+
+    @if($modalShow)
+        <x-dialog-modal wire:model="modalShow" :maxWidth="'full'">
+            <x-slot name="title">
+                Mostrar Usuario
+            </x-slot>
+            <x-slot name="content">
+                <livewire:users.user-show :user="$user"/>
+            </x-slot>
+            <x-slot name="footer"></x-slot>
+        </x-dialog-modal>
+    @endif
+
+    @if($modalDelete)
+        <x-dialog-modal wire:model="modalDelete" :maxWidth="'sm'">
+            <x-slot name="title">
+                Borrar al Usuario {{ $user->name }} {{ $user->surname }}
+            </x-slot>
+            <x-slot name="content">
+                ¿Deseas borrar al Usuario {{ $user->name }} {{ $user->surname }}? Recuerda que esta es una acción de riesgo ya que la información de ese usuario podría perderse.
+            </x-slot>
+            <x-slot name="footer">
+                <x-button wire:click="closeModal('delete')" class="bg-blue-500 mr-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    Cancelar
+                </x-button>
+                <x-danger-button wire:click="delete()" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                    Eliminar
+                </x-danger-button>
+            </x-slot>
+        </x-dialog-modal>
+    @endif
+
+{{--    @if($modalRestore)--}}
+{{--        <x-dialog-modal wire:model="modalRestore" :maxWidth="'sm'">--}}
+{{--            <x-slot name="title">--}}
+{{--                Restaurar al Usuario {{ $user->name }} {{ $user->surname }}--}}
+{{--            </x-slot>--}}
+{{--            <x-slot name="content">--}}
+{{--                ¿Deseas restaurar al Usuario {{ $user->name }} {{ $user->surname }}?--}}
+{{--            </x-slot>--}}
+{{--            <x-slot name="footer">--}}
+{{--                <x-button wire:click="restore()" class="bg-blue-500 mr-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">--}}
+{{--                    Restaurar--}}
+{{--                </x-button>--}}
+{{--                <x-danger-button wire:click="closeModal('impersonate')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">--}}
+{{--                    Cancelar--}}
+{{--                </x-danger-button>--}}
+{{--            </x-slot>--}}
+{{--        </x-dialog-modal>--}}
+{{--    @endif--}}
+
 </div>

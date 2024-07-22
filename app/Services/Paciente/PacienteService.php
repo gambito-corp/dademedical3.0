@@ -61,8 +61,17 @@ class PacienteService
         return $this->pacienteRepository->create($data);
     }
 
-    public function checkReniec()
+    public function checkReniec($dni)
     {
-        return 'Toca Pelotas';
+        return $this->pacienteRepository->checkReniec($dni);
+
+
+
+
+        return [
+            'numero_documento' => '12345678',
+            'nombres' => 'Pedro',
+            'apellidos' => 'Aguirre'
+        ];
     }
 }
