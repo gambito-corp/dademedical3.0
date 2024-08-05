@@ -9,6 +9,8 @@ interface PacienteInterface
 {
     public function query($orderColumn = 'id', $orderDirection = 'desc');
     public function find($id): Paciente|Collection|null;
+    public function findByDni($dni): Paciente|Collection|null;
+
     public function findWithTrashed($id): Paciente|Collection|null;
     public function all(): Collection;
     public function pacientesActivos() : Collection;
@@ -16,7 +18,7 @@ interface PacienteInterface
     public function pacientesPendientes() : Collection;
     public function allWithTrashed(): Collection;
     public function allOnlyTrashed(): Collection;
-    public function create(array $data): Paciente|Collection|null;
+    public function save(array $data): Paciente|Collection|null;
 
     public function checkReniec($dni);
 }

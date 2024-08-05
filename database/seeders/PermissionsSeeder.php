@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -16,7 +15,7 @@ class PermissionsSeeder extends Seeder
     public function run(): void
     {
         $permissions = [
-//            Usuarios
+            // Usuarios
             'ver-usuarios',
             'crear-usuario',
             'store-usuario',
@@ -28,33 +27,42 @@ class PermissionsSeeder extends Seeder
             'borrar-usuario',
             'restaurar-usuario',
             'eliminar-usuarios',
-//            Roles
-//            'ver-roles',
-//            'crear-roles',
-//            'store-roles',
-//            'ver-rol',
-//            'editar-roles',
-//            'actualizar-roles',
-//            'borrar-roles',
-//            'restaurar-roles',
-//            'eliminar-roles',
-//            Permisos
-//            'ver-permisos',
-//            'crear-permisos',
-//            'store-permisos',
-//            'ver-permiso',
-//            'editar-permisos',
-//            'actualizar-permisos',
-//            'borrar-permisos',
-//            'restaurar-permisos',
-//            'eliminar-permisos'
+            // Pacientes
+            'ver-pacientes',
+            'crear-pacientes',
+            'store-pacientes',
+            'ver-paciente',
+            'editar-pacientes',
+            'actualizar-pacientes',
+            'borrar-pacientes',
+            'restaurar-pacientes',
+            'eliminar-pacientes',
+            // Roles y Permisos
+            'ver-roles',
+            'crear-roles',
+            'store-roles',
+            'ver-rol',
+            'editar-roles',
+            'actualizar-roles',
+            'borrar-roles',
+            'restaurar-roles',
+            'eliminar-roles',
+            'ver-permisos',
+            'crear-permisos',
+            'store-permisos',
+            'ver-permiso',
+            'editar-permisos',
+            'actualizar-permisos',
+            'borrar-permisos',
+            'restaurar-permisos',
+            'eliminar-permisos'
         ];
 
         foreach ($permissions as $perm) {
             try {
                 Permission::create(['name' => $perm]);
             } catch (\Spatie\Permission\Exceptions\PermissionAlreadyExists $e) {
-                //si el permiso ya existe, no hace nada y continua el ciclo
+                // si el permiso ya existe, no hace nada y continua el ciclo
             }
         }
 
@@ -64,16 +72,12 @@ class PermissionsSeeder extends Seeder
             'Administrador',
             'Gerencia',
             'Hospitales',
-            'Medicos',
-            'Pacientes'
+            'Medicos'
         ];
-
-        /*
-         * */
 
         foreach ($roles as $roleName) {
             $role = Role::create(['name' => $roleName]);
-            if ($roleName == 'SuperAdmin' || $roleName == 'Dueño' || $roleName == 'Adminstrador') {
+            if (in_array($roleName, ['SuperAdmin', 'Dueño', 'Administrador'])) {
                 $role->givePermissionTo(Permission::all());
             }
         }
@@ -98,26 +102,20 @@ class PermissionsSeeder extends Seeder
         if ($usuario) {
             $usuario->assignRole('Hospitales');
         }
-        //dame todos los usuarios del 6 en Adelante
+        // asignar roles a usuarios del 6 en adelante
         $usuarios = User::query()->where('id', '>=', 6)->get();
         foreach ($usuarios as $usuario) {
             $Hospital = $usuario->hospital;
-            //si hospital no tiene padre asigna el rol de Gerencia
             if ($Hospital->parent_id == null) {
                 $usuario->assignRole('Gerencia');
-            }
-            //si hospital tiene padre asigna el rol de Hospitales solo si es el primer usuario con ese hospital_id
-            if ($Hospital->parent_id != null) {
-                $usuarios = User::query()->where('hospital_id', $Hospital->id)->get();
-                if ($usuarios->count() == 1) {
+            } elseif ($Hospital->parent_id != null) {
+                $usuariosHospital = User::query()->where('hospital_id', $Hospital->id)->get();
+                if ($usuariosHospital->count() == 1) {
                     $usuario->assignRole('Hospitales');
-                }else{
+                } else {
                     $usuario->assignRole('Medicos');
                 }
             }
-            $usuario->assignRole('Medicos');
         }
     }
-
-//    pacientes->medicos->hospitales->Gerencia->Administrador->Dueño
 }

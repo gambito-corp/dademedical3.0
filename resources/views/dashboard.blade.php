@@ -10,16 +10,18 @@
             <div class="container mx-auto mt-10">
                 <div class="p-6 max-w-sm mx-auto bg-white rounded-xl shadow-md flex items-center space-x-4">
                     <div>
-                        @dump(session()->all())
-
-                        <div class="text-2xl font-medium text-red-900">¡Graficas a presentar!</div>
-                        <p class="text-gray-500">una Card con nuevas Solicitudes de (hoy/semana/mes)</p>
-                        <p class="text-gray-500">una Card con nuevas entregas de (hoy/semana/mes)</p>
-                        <p class="text-gray-500">una Card con nuevas recojos de (hoy/semana/mes)</p>
-                        <p class="text-gray-500">una Card con nuevas finalizados de (hoy/semana/mes)</p>
-                        <p class="text-gray-500">una Card con nuevas potencia total de LPM alquilado de (hoy/semana/mes)</p>
-                        <p class="text-gray-500">una Card con nuevas pendientes incidencias de (hoy/semana/mes)</p>
-                        <p class="text-gray-500">una Card con nuevas pendientes crecimiento de Contratos activos</p>
+                        @if(auth()->user()->can('ver-pacientes'))
+                            <div class="text-2xl font-medium text-red-900">¡Graficas a presentar!</div>
+                            <p class="text-gray-500">una Card con nuevas Solicitudes de (hoy/semana/mes)</p>
+                            <p class="text-gray-500">una Card con nuevas entregas de (hoy/semana/mes)</p>
+                            <p class="text-gray-500">una Card con nuevas recojos de (hoy/semana/mes)</p>
+                            <p class="text-gray-500">una Card con nuevas finalizados de (hoy/semana/mes)</p>
+                            <p class="text-gray-500">una Card con nuevas potencia total de LPM alquilado de (hoy/semana/mes)</p>
+                            <p class="text-gray-500">una Card con nuevas pendientes incidencias de (hoy/semana/mes)</p>
+                            <p class="text-gray-500">una Card con nuevas pendientes crecimiento de Contratos activos</p>
+                        @else
+                            <p class="text-gray-500">No tienes permisos para ver este contenido.</p>
+                        @endif
                     </div>
                 </div>
             </div>

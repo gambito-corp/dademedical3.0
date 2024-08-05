@@ -20,31 +20,87 @@ use Illuminate\Support\Facades\DB;
 
 class PacienteSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         for ($i = 0; $i < rand(10, 100); $i++) {
-            Paciente::factory()->create();
-            for ($j = 0; $j <= 1; $j++) {
-                $contrato = Contrato::factory()->create();
+            $paciente = Paciente::factory()->create();
+            $contrato = Contrato::factory()->create(['paciente_id' => $paciente->id]);
 
-                Diagnostico::factory()->create([
+            $creacion_documentos = [
+                Archivo::TIPO_SOLICITUD_OXIGENOTERAPIA,
+                Archivo::TIPO_DNI_PACIENTE,
+                Archivo::TIPO_DNI_CUIDADOR,
+                Archivo::TIPO_DECLARACION_DOMICILIO,
+                Archivo::TIPO_CROQUIS_DIRECCION,
+                Archivo::TIPO_OTROS,
+            ];
+
+            foreach ($creacion_documentos as $doc) {
+                Archivo::factory()->create([
                     'contrato_id' => $contrato->id,
+                    'paciente_id' => $paciente->id,
+                    'tipo' => $doc,
+                    'nombre' => $doc . '_' . now()->format('Y_m_d') . '.pdf',
+                    'ruta' => 'archivos/' . strtolower(str_replace(' ', '-', $paciente->name)) . '-' . strtolower(str_replace(' ', '-', $paciente->surname)) . '-' . $paciente->id . '/' . $doc . '_' . now()->timestamp . '.pdf',
                 ]);
+            }
 
+            for ($j = 0; $j <= 1; $j++) {
+                $contrato = Contrato::factory()->create(['paciente_id' => $paciente->id]);
+
+                Diagnostico::factory()->create(['contrato_id' => $contrato->id]);
                 ContratoFechas::factory()->create();
                 ContratoUsuario::factory()->create();
                 Direccion::factory()->create();
-                for ($k = 0; $k <= rand(1,3); $k++) {
+
+                for ($k = 0; $k <= rand(1, 3); $k++) {
                     Telefono::factory()->create();
                 }
-                for ($l = 0; $l <= rand(1,3); $l++) {
-                    Archivo::factory()->create();
+
+                $aprobacion_documentos = [
+                    Archivo::TIPO_ENTREGA_DISPOSITIVOS,
+                    Archivo::TIPO_GUIA_REMISION,
+                ];
+
+                foreach ($aprobacion_documentos as $doc) {
+                    Archivo::factory()->create([
+                        'contrato_id' => $contrato->id,
+                        'paciente_id' => $paciente->id,
+                        'tipo' => $doc,
+                        'nombre' => $doc . '_' . now()->format('Y_m_d') . '.pdf',
+                        'ruta' => 'archivos/' . strtolower(str_replace(' ', '-', $paciente->name)) . '-' . strtolower(str_replace(' ', '-', $paciente->surname)) . '-' . $paciente->id . '/' . $contrato->id . '/' . $doc . '_' . now()->timestamp . '.pdf',
+                    ]);
                 }
 
-                // Para cada contrato, se asigna un concentrador
+                $durante_contrato_documentos = [
+                    Archivo::TIPO_CAMBIO_CONSUMIBLE,
+                    Archivo::TIPO_CAMBIO_MAQUINA,
+                    Archivo::TIPO_CAMBIO_DOSIS,
+                    Archivo::TIPO_CAMBIO_DIRECCION,
+                    Archivo::TIPO_INFORME_INCIDENCIA,
+                    Archivo::TIPO_RESPUESTA_INCIDENCIA,
+                ];
+
+                for ($l = 0; $l <= rand(0, count($durante_contrato_documentos) - 1); $l++) {
+                    $doc = $durante_contrato_documentos[array_rand($durante_contrato_documentos)];
+                    Archivo::factory()->create([
+                        'contrato_id' => $contrato->id,
+                        'paciente_id' => $paciente->id,
+                        'tipo' => $doc,
+                        'nombre' => $doc . '_' . now()->format('Y_m_d') . '.pdf',
+                        'ruta' => 'archivos/' . strtolower(str_replace(' ', '-', $paciente->name)) . '-' . strtolower(str_replace(' ', '-', $paciente->surname)) . '-' . $paciente->id . '/' . $contrato->id . '/' . $doc . '_' . now()->timestamp . '.pdf',
+                    ]);
+                }
+
+                $finalizacion_documento = Archivo::TIPO_RECOJO_DISPOSITIVOS;
+                Archivo::factory()->create([
+                    'contrato_id' => $contrato->id,
+                    'paciente_id' => $paciente->id,
+                    'tipo' => $finalizacion_documento,
+                    'nombre' => $finalizacion_documento . '_' . now()->format('Y_m_d') . '.pdf',
+                    'ruta' => 'archivos/' . strtolower(str_replace(' ', '-', $paciente->name)) . '-' . strtolower(str_replace(' ', '-', $paciente->surname)) . '-' . $paciente->id . '/' . $contrato->id . '/' . $finalizacion_documento . '_' . now()->timestamp . '.pdf',
+                ]);
+
                 $concentrador = Concentrador::factory()->create();
                 $concentradorProducto = Producto::factory()->create([
                     'productable_type' => Concentrador::class,
@@ -55,7 +111,6 @@ class PacienteSeeder extends Seeder
                     'producto_id' => $concentradorProducto->id,
                 ]);
 
-                // 75% de probabilidad de asignar un tanque
                 if (rand(0, 100) < 75) {
                     $tanque = Tanque::factory()->create();
                     $tanqueProducto = Producto::factory()->create([
@@ -67,7 +122,6 @@ class PacienteSeeder extends Seeder
                         'producto_id' => $tanqueProducto->id,
                     ]);
 
-                    // Si se asignó un tanque, hay un 20% de probabilidad de asignar un regulador y un carrito
                     if (rand(0, 100) < 20) {
                         $regulador = Regulador::factory()->create();
                         $reguladorProducto = Producto::factory()->create([

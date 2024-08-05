@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use Illuminate\Support\Facades\App;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -12,6 +13,11 @@ class BaseComponent extends Component
     public bool $showDropdown = false;
     public int $paginate = 10;
     public array $paginacion = [10, 15, 20, 25, 30, 35, 40, 45, 50, 60, 70, 80, 90, 100, 200, 300, 400, 500, 1000];
+
+    public function mount()
+    {
+        App::setLocale(session('locale'));
+    }
     public function sortBy(string $column) : void
     {
         if ($this->orderColumn === $column) {

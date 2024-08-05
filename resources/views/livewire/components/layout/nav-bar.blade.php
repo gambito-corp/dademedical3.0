@@ -1,16 +1,3 @@
-@php
-    $nav_links = [
-        ['name' => 'Dashboard', 'route' => 'dashboard', 'active' => request()->routeIs('dashboard')],
-        ['name' => 'users.Users', 'route' => 'usuarios.index', 'active' => request()->routeIs('usuarios.*')],
-        ['name' => 'patient.Patients', 'route' => 'patients.index', 'active' => request()->routeIs('pacientes.*')],
-//        ['name' => 'appointment.Appointments', 'route' => 'citas.index', 'active' => request()->routeIs('citas.*')],
-//        ['name' => 'report.Report', 'route' => 'reportes.index', 'active' => request()->routeIs('reportes.*')],
-//        ['name' => 'settings.Settings', 'route' => 'configuracion', 'active' => request()->routeIs('configuracion')],
-//        ['name' => 'help.Help', 'route' => 'ayuda', 'active' => request()->routeIs('ayuda')],
-//        ['name' => 'about.About', 'route' => 'acerca', 'active' => request()->routeIs('acerca')],
-    ];
-@endphp
-
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -27,12 +14,11 @@
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     @foreach ($nav_links as $nav_link)
                         <x-nav-link :href="route($nav_link['route'])" :active="$nav_link['active']">
-                            {{ __($nav_link['name']) }}
+                            {{ $nav_link['name'] }}
                         </x-nav-link>
                     @endforeach
                 </div>
             </div>
-
 
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <!-- Teams Dropdown -->
@@ -55,17 +41,17 @@
                                 <div class="w-60">
                                     <!-- Team Management -->
                                     <div class="block px-4 py-2 text-xs text-gray-400">
-                                        {{ __('Manage Team') }}
+                                        {{ __('dashboard.manage_team') }}
                                     </div>
 
                                     <!-- Team Settings -->
                                     <x-dropdown-link href="{{ route('teams.show', Auth::user()->currentTeam->id) }}">
-                                        {{ __('Team Settings') }}
+                                        {{ __('dashboard.team_settings') }}
                                     </x-dropdown-link>
 
                                     @can('create', Laravel\Jetstream\Jetstream::newTeamModel())
                                         <x-dropdown-link href="{{ route('teams.create') }}">
-                                            {{ __('Create New Team') }}
+                                            {{ __('dashboard.create_new_team') }}
                                         </x-dropdown-link>
                                     @endcan
 
@@ -74,7 +60,7 @@
                                         <div class="border-t border-gray-200"></div>
 
                                         <div class="block px-4 py-2 text-xs text-gray-400">
-                                            {{ __('Switch Teams') }}
+                                            {{ __('dashboard.switch_teams') }}
                                         </div>
 
                                         @foreach (Auth::user()->allTeams() as $team)
@@ -111,16 +97,16 @@
                         <x-slot name="content">
                             <!-- Account Management -->
                             <div class="block px-4 py-2 text-xs text-gray-400">
-                                {{ __('Manage Account') }}
+                                {{ __('dashboard.manage_account') }}
                             </div>
 
                             <x-dropdown-link href="{{ route('profile.show') }}">
-                                {{ __('Profile') }}
+                                {{ __('dashboard.profile') }}
                             </x-dropdown-link>
 
                             @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
                                 <x-dropdown-link href="{{ route('api-tokens.index') }}">
-                                    {{ __('API Tokens') }}
+                                    {{ __('dashboard.api_tokens') }}
                                 </x-dropdown-link>
                             @endif
 
@@ -132,7 +118,7 @@
 
                                 <x-dropdown-link href="{{ route('logout') }}"
                                                  @click.prevent="$root.submit();">
-                                    {{ __('Log Out') }}
+                                    {{ __('dashboard.logout') }}
                                 </x-dropdown-link>
                             </form>
                         </x-slot>
@@ -161,9 +147,6 @@
                         </button>
                     @endif
                 </div>
-
-
-
             </div>
 
             <!-- Hamburger -->
@@ -198,18 +181,16 @@
                         </button>
                     @endif
                 </div>
-
             </div>
         </div>
     </div>
 
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
-
         <div class="pt-2 pb-3 space-y-1">
             @foreach ($nav_links as $nav_link)
                 <x-responsive-nav-link :href="route($nav_link['route'])" :active="$nav_link['active']">
-                    {{ __($nav_link['name']) }}
+                    {{ $nav_link['name'] }}
                 </x-responsive-nav-link>
             @endforeach
         </div>
@@ -231,12 +212,12 @@
             <div class="mt-3 space-y-1">
                 <!-- Account Management -->
                 <x-responsive-nav-link href="{{ route('profile.show') }}" :active="request()->routeIs('profile.show')">
-                    {{ __('Profile') }}
+                    {{ __('dashboard.profile') }}
                 </x-responsive-nav-link>
 
                 @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
                     <x-responsive-nav-link href="{{ route('api-tokens.index') }}" :active="request()->routeIs('api-tokens.index')">
-                        {{ __('API Tokens') }}
+                        {{ __('dashboard.api_tokens') }}
                     </x-responsive-nav-link>
                 @endif
 
@@ -246,7 +227,7 @@
 
                     <x-responsive-nav-link href="{{ route('logout') }}"
                                            @click.prevent="$root.submit();">
-                        {{ __('Log Out') }}
+                        {{ __('dashboard.logout') }}
                     </x-responsive-nav-link>
                 </form>
 
@@ -255,17 +236,17 @@
                     <div class="border-t border-gray-200"></div>
 
                     <div class="block px-4 py-2 text-xs text-gray-400">
-                        {{ __('Manage Team') }}
+                        {{ __('dashboard.manage_team') }}
                     </div>
 
                     <!-- Team Settings -->
                     <x-responsive-nav-link href="{{ route('teams.show', Auth::user()->currentTeam->id) }}" :active="request()->routeIs('teams.show')">
-                        {{ __('Team Settings') }}
+                        {{ __('dashboard.team_settings') }}
                     </x-responsive-nav-link>
 
                     @can('create', Laravel\Jetstream\Jetstream::newTeamModel())
                         <x-responsive-nav-link href="{{ route('teams.create') }}" :active="request()->routeIs('teams.create')">
-                            {{ __('Create New Team') }}
+                            {{ __('dashboard.create_new_team') }}
                         </x-responsive-nav-link>
                     @endcan
 
@@ -274,7 +255,7 @@
                         <div class="border-t border-gray-200"></div>
 
                         <div class="block px-4 py-2 text-xs text-gray-400">
-                            {{ __('Switch Teams') }}
+                            {{ __('dashboard.switch_teams') }}
                         </div>
 
                         @foreach (Auth::user()->allTeams() as $team)
@@ -283,7 +264,6 @@
                     @endif
                 @endif
             </div>
-
         </div>
     </div>
 </nav>

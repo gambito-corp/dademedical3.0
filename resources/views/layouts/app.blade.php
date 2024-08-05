@@ -18,6 +18,7 @@
         @livewireStyles
     </head>
     <body class="font-sans antialiased">
+    @livewire('language-switcher')
         <x-banner />
 
         <div class="min-h-screen bg-gray-100 flex flex-col">

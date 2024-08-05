@@ -2,22 +2,38 @@
 namespace App\Services\Paciente;
 
 use App\Interfaces\Paciente\PacienteInterface;
+use App\Models\Contrato;
+use App\Models\Paciente;
+use App\Services\Archivo\ArchivoService;
+use App\Services\Contrato\ContratoService;
+use App\Services\Diagnostico\DiagnosticoService;
+use App\Services\Direccion\DireccionService;
 use App\Services\Logs\LogService;
+use App\Services\Telefono\TelefonoService;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Str;
 
 class PacienteService
 {
     public Collection $pacientes;
 
-    public function __construct(protected PacienteInterface $pacienteRepository, protected LogService $logService){}
+    public function __construct(
+        protected PacienteInterface $pacienteRepository,
+        protected LogService $logService,
+        protected DireccionService $direccionService,
+        protected TelefonoService $telefonoService,
+        protected DiagnosticoService $diagnosticoService,
+        protected ContratoService $contratoService,
+        protected ArchivoService $archivoService
+    ){}
 
     public function getPatients(string $search, string $filter, string $orderColumn, string $orderDirection, int $paginate)
     {
         $query = $this->pacienteRepository->query($orderColumn, $orderDirection);
 
         $query = match ($filter) {
-            'active' => $query->whereNull('pacientes.deleted_at'),
-            'inactive' => $query->onlyTrashed(),
+            'active' => $query->where('active', '1')->whereNull('pacientes.deleted_at'),
+            'inactive' => $query->where('active', '0')->withTrashed(),
             default => $query,
         };
 
@@ -35,7 +51,10 @@ class PacienteService
 
         return $query->paginate($paginate);
     }
-
+    public function findWithTrashed($id)
+    {
+        return $this->pacienteRepository->findWithTrashed($id);
+    }
     public function all()
     {
         return $this->pacienteRepository->all();
@@ -56,22 +75,95 @@ class PacienteService
         return $this->pacienteRepository->pacientesPendientes();
     }
 
-    public function create(array $data): Collection
+    public function create(array $data): Paciente|Collection|null
     {
-        return $this->pacienteRepository->create($data);
+        $paciente = $this->save($data);
+        $data['paciente_id'] = $paciente->id;
+        $contrato = $this->redirigirServiceContrato($data);
+        $data['contrato_id'] = $contrato->id;
+        $this->redirigirServiceDireccion($data);
+        $this->redirigirServiceTelefonos($data);
+        $this->redirigirServiceDiagnostico($data);
+        $this->redirigirServiceArchivos($data);
+
+
+        return $this->pacienteRepository->find($data['paciente_id']);
     }
 
     public function checkReniec($dni)
     {
         return $this->pacienteRepository->checkReniec($dni);
+    }
 
-
-
-
-        return [
-            'numero_documento' => '12345678',
-            'nombres' => 'Pedro',
-            'apellidos' => 'Aguirre'
+    private function redirigirServiceDireccion(array $data)
+    {
+        $infoDireccion = [
+            'contrato_id' => $data['contrato_id'],
+            'distrito' => $data['distrito'],
+            'calle' => Str::title($data['direccion']),
+            'referencia' => Str::title($data['referencia']),
+            'responsable' => Str::title($data['familiar_responsable']),
+            'active' => 1,
         ];
+
+        return $this->direccionService->save(direccion: $infoDireccion);
+    }
+
+    private function redirigirServiceTelefonos(array $data)
+    {
+        $this->telefonoService->save(telefonos: $data['telefonos'], contractId: $data['contrato_id']);
+    }
+
+    private function redirigirServiceDiagnostico(array $data)
+    {
+        $infoDiagnostico = [
+            'contrato_id' => $data['contrato_id'],
+            'historia_clinica' => $data['historia_clinica'],
+            'diagnostico' => Str::title($data['diagnostico']),
+            'dosis' => $data['dosis'],
+            'frecuencia' => $data['horas_oxigeno'],
+            'active' => 'yes',
+        ];
+
+        $this->diagnosticoService->save(diagnostico: $infoDiagnostico);
+    }
+
+    private function redirigirServiceContrato(array $data): Contrato|Collection|null
+    {
+        $infoContrato = [
+            'paciente_id' => $data['paciente_id'],
+            'estado_orden' => 0,
+            'traqueotomia' => $data['traqueotomia'],
+        ];
+
+        return $this->contratoService->save(contrato: $infoContrato);
+    }
+
+    private function redirigirServiceArchivos(array $data)
+    {
+        $infoArchivos = [
+            'solicitud_oxigenoterapia' => $data['solicitud_oxigenoterapia'] ?? null,
+            'declaracion_jurada' => $data['declaracion_jurada'] ?? null,
+            'documento_identidad' => $data['documento_identidad'] ?? null,
+            'documento_identidad_cuidador' => $data['documento_identidad_cuidador'] ?? null,
+            'croquis' => $data['croquis'] ?? null,
+            'otros' => $data['otros'] ?? null,
+        ];
+        $this->archivoService->save(archivos: $infoArchivos, contractId: $data['contrato_id'], patientId: $data['paciente_id'], name: $data['nombres'], surname: $data['apellidos']);
+    }
+
+    private function save(array $data): Paciente|Collection|null
+    {
+        $infoPaciente = [
+            'user_id' => auth()->id(),
+            'dni' => $data['numero_documento'],
+            'name' => Str::title($data['nombres']),
+            'surname' => Str::title($data['apellidos']),
+            'edad' => $data['edad'],
+            'origen' => $data['tipo_origen'],
+            'primer_ingreso' => !$data['reingreso'],
+            'active' => 1,
+        ];
+        return $this->pacienteRepository->save(data: $infoPaciente);
     }
 }

@@ -16,19 +16,26 @@ class Patient extends Component
     {
         $this->patientService = $patientService;
     }
+
     public function mount() : void
-    {}
+    {
+        parent::mount();
+        $this->paciente = null; // Inicializar la variable $paciente
+    }
+
     public function render()
     {
         $data = $this->loadPatients();
         return view('livewire.patients.patient', compact('data'));
     }
+
     public function loadPatients()
     {
         return $this->patientService->getPatients(
             $this->search, $this->filter, $this->orderColumn, $this->orderDirection, $this->paginate
         );
     }
+
     public function changePatient(string $title) : void
     {
         $this->currentFilter = $title;
@@ -36,11 +43,10 @@ class Patient extends Component
         $this->resetPage();
     }
 
-
     public function openModal(string $type, $patientId = null):void
     {
         if ($patientId !== null) {
-//            $this->paciente = $this->patientService->findWithTrashed($patientId);
+            $this->paciente = $this->patientService->findWithTrashed($patientId);
         }
 
         $this->resetModals();
@@ -53,6 +59,7 @@ class Patient extends Component
             default => null,
         };
     }
+
     #[On('closeModal')]
     public function closeModal(string $type, $patientId = null)
     {
@@ -68,6 +75,7 @@ class Patient extends Component
             default => null,
         };
     }
+
     private function resetModals()
     {
         $this->modalCreate = false;

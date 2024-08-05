@@ -27,14 +27,36 @@ class Contrato extends Model
         'comentario_alta',
     ];
 
-    public function paciente(){
+    public function paciente()
+    {
         return $this->belongsTo(Paciente::class);
     }
-    public function archivos(){
-        return $this->belongsToMany(Archivo::class, 'contrato_archivos');
+
+    public function archivos()
+    {
+        return $this->hasMany(Archivo::class);
     }
-    public function usuariosRelacionados()
+
+    public function diagnostico()
+    {
+        return $this->hasOne(Diagnostico::class);
+    }
+
+    public function direccion()
+    {
+        return $this->hasOne(Direccion::class);
+    }
+
+    public function telefonos()
+    {
+        return $this->hasMany(Telefono::class);
+    }
+    public function contratoUsuario()
     {
         return $this->hasOne(ContratoUsuario::class);
+    }
+    public function contratoFechas()
+    {
+        return $this->hasOne(ContratoFechas::class);
     }
 }

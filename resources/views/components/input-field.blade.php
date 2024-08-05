@@ -9,9 +9,9 @@
             @endforeach
         </select>
     @elseif($type == 'file')
-        <input type="{{ $type }}" name="{{ $name }}" id="{{ $name }}" wire:model.lazy="{{ $name }}" class="mt-1 block w-full border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+        <input type="file" name="{{ $name }}" id="{{ $name }}" wire:model.lazy="{{ $name }}" class="mt-1 block w-full border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
     @else
-        <input type="{{ $type }}" name="{{ $name }}" id="{{ $name }}" wire:model.lazy="{{ $name }}" @if($name === 'paciente.numero_documento') wire:blur="checkReniec" @endif class="mt-1 block w-full border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+        <input type="text" name="{{ $name }}" id="{{ $name }}" wire:model.lazy="{{ $name }}" @if($name === 'paciente.numero_documento') wire:blur="checkReniec" @endif class="mt-1 block w-full border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
     @endif
 
     @error($name)

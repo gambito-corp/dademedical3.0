@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Archivo;
 use App\Models\Contrato;
+use App\Models\Paciente;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Dompdf\Dompdf;
 use Illuminate\Support\Facades\Storage;
@@ -14,50 +15,60 @@ class ArchivoFactory extends Factory
 
     public function definition()
     {
-
         $contrato = Contrato::all()->last();
-        // Generate a date string for file names
+        $paciente = $contrato ? $contrato->paciente : Paciente::all()->last();
+
+        if (!$contrato || !$paciente) {
+            // Crear un paciente y contrato si no existen
+            $paciente = Paciente::factory()->create();
+            $contrato = Contrato::factory()->create(['paciente_id' => $paciente->id]);
+        }
+
         $date = $this->faker->date('Y_m_d');
-
-        // Define array of possible file names
-        $file_names = [
-            'solicitud_de_Oxigenoterapia_' . $date,
-            'dni_' . $date,
-            'documento_alta_' . $date
-        ];
-
-        // Pick a random file name
-        $file_name = $this->faker->randomElement($file_names);
-
-        // Generate a timestamp for the file path
         $timestamp = time();
 
-        // Prepare PDF content
+        $tiposDocumentos = [
+            Archivo::TIPO_SOLICITUD_OXIGENOTERAPIA,
+            Archivo::TIPO_DNI_PACIENTE,
+            Archivo::TIPO_DNI_CUIDADOR,
+            Archivo::TIPO_DECLARACION_DOMICILIO,
+            Archivo::TIPO_CROQUIS_DIRECCION,
+            Archivo::TIPO_OTROS,
+            Archivo::TIPO_ENTREGA_DISPOSITIVOS,
+            Archivo::TIPO_GUIA_REMISION,
+            Archivo::TIPO_CAMBIO_CONSUMIBLE,
+            Archivo::TIPO_CAMBIO_MAQUINA,
+            Archivo::TIPO_CAMBIO_DOSIS,
+            Archivo::TIPO_CAMBIO_DIRECCION,
+            Archivo::TIPO_INFORME_INCIDENCIA,
+            Archivo::TIPO_RESPUESTA_INCIDENCIA,
+            Archivo::TIPO_RECOJO_DISPOSITIVOS,
+        ];
+
+        $tipo = $this->faker->randomElement($tiposDocumentos);
+        $file_name = $tipo . '_' . $date . '.pdf';
+
         $dompdf = new Dompdf();
         $dompdf->loadHtml('<h1>Contenido de prueba</h1>');
         $dompdf->render();
         $pdfContent = $dompdf->output();
 
-        if ($contrato) {
-            $pacienteName = $contrato->paciente->name;
-            $pacienteId = $contrato->paciente->id;
-            $contratoId = $contrato->id;
-        } else {
-            $contratoId = Contrato::all()->last()->id;
-            $pacienteName = Contrato::all()->last()->paciente->name;
-            $pacienteId = Contrato::all()->last()->paciente->id;
-        }
+        $patientName = strtolower(str_replace(' ', '-', $paciente->name));
+        $patientSurname = strtolower(str_replace(' ', '-', $paciente->surname));
+        $patientId = $paciente->id;
 
-        // Use the specific 'archivos' disk to store the PDF file
-        Storage::disk('archivos')->put($pacienteName.'-'.$pacienteId.'/'.$contratoId.'/'.$timestamp.'.pdf', $pdfContent);
+        $directory = $patientName . '-' . $patientSurname . '-' . $patientId . '/' . $tipo;
+        $path = $file_name;
 
-        // Define the file path
-        $filePath = $pacienteName.'-'.$pacienteId.'/'.$contratoId.'/'.$timestamp.'.pdf';
+        Storage::disk('archivos')->put($directory . '/' . $path, $pdfContent);
+        $filePath = $directory . '/' . $path;
 
         return [
-            'contrato_id' => $contratoId,
+            'contrato_id' => $contrato->id,
+            'paciente_id' => $paciente->id,
             'nombre' => $file_name,
             'ruta' => $filePath,
+            'tipo' => $tipo,
         ];
     }
 }

@@ -13,7 +13,7 @@ class User extends Component
     protected AuthService $authService;
     public $usuarios, $user;
     public bool $modalCreate = false, $modalEdit = false, $modalShow = false, $modalDelete = false, $modalImpersonate = false, $modalRestore = false;
-     public function boot(UserServices $userService, AuthService $authService) : void
+    public function boot(UserServices $userService, AuthService $authService) : void
     {
         $this->userService = $userService;
         $this->authService = $authService;

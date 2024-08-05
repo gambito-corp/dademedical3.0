@@ -2,9 +2,7 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Notifications\CustomVerifyEmail;
-use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -86,6 +84,16 @@ class User extends Authenticatable
                 ->orWhere('username', 'like', "%{$search}%");
         });
     }
+    protected $appends = [
+        'profile_photo_url',
+    ];
+
+    /*OVERRIDES*/
+
+    public function sendEmailVerificationNotification(string $originalPasword = '')
+    {
+        $this->notify(new CustomVerifyEmail($originalPasword));
+    }
     /*RELACIONES*/
 
     public function hospital()
@@ -122,20 +130,4 @@ class User extends Authenticatable
     {
         return $this->hasMany(ContratoUsuario::class, 'finalizador_id');
     }
-    /**
-     * The accessors to append to the model's array form.
-     *
-     * @var array
-     */
-    protected $appends = [
-        'profile_photo_url',
-    ];
-
-    /*OVERRIDES*/
-
-    public function sendEmailVerificationNotification(string $originalPasword = '')
-    {
-        $this->notify(new CustomVerifyEmail($originalPasword));
-    }
-
 }

@@ -1,7 +1,7 @@
 <div>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('users.Users Panel') }}
+            {{ __('users.users_panel') }}
         </h2>
     </x-slot>
     <div class="py-4">
@@ -11,20 +11,20 @@
                     <div class="flex justify-end space-x-2">
                         <button
                             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-xl"
-                            title="Crear Usuario"
+                            title="{{ __('users.create_user') }}"
                             wire:click="openModal('create')">
                             <i class="fas fa-plus"></i>
                         </button>
                     </div>
                     <div class="flex justify-between space-x-2">
                         <div class="{{ $currentFilter == 'active' ? 'bg-blue-700 text-white' : 'bg-white text-blue-500 border border-blue-500 hover:text-white hover:border-0 ' }} w-1/3 p-2 hover:bg-blue-700 font-bold py-2 px-4 rounded-xl transition-all duration-300" wire:click="changeUsers('active')">
-                            <span>Usuarios Activos</span>
+                            <span>{{ __('users.active_users') }}</span>
                         </div>
                         <div class="{{ $currentFilter == 'inactive' ? 'bg-blue-700 text-white' : 'bg-white text-blue-500 border border-blue-500 hover:text-white hover:border-0 ' }} w-1/3 p-2 hover:bg-blue-700 font-bold py-2 px-4 rounded-xl transition-all duration-300" wire:click="changeUsers('inactive')">
-                            <span>Usuarios Inactivos</span>
+                            <span>{{ __('users.inactive_users') }}</span>
                         </div>
                         <div class="{{ $currentFilter == 'deleted' ? 'bg-blue-700 text-white' : 'bg-white text-blue-500 border border-blue-500 hover:text-white hover:border-0 ' }} w-1/3 p-2 hover:bg-blue-700 font-bold py-2 px-4 rounded-xl transition-all duration-300" wire:click="changeUsers('deleted')">
-                            <span>Usuarios Eliminados</span>
+                            <span>{{ __('users.deleted_users') }}</span>
                         </div>
                     </div>
                     <div class="flex justify-between space-x-2">
@@ -36,7 +36,7 @@
                                     name="inputSelect"
                                     id="inputSelect"
                                     type="text"
-                                    placeholder="Paginación"
+                                    placeholder="{{ __('users.pagination_placeholder') }}"
                                     wire:model="paginate"
                                     wire:click.self="showPagination">
                                 @if($showDropdown)
@@ -44,7 +44,7 @@
                                         @forelse($paginacion as $key => $item)
                                             <div class="p-2 hover:bg-gray-100" wire:click="selectedPaginate('{{ $item }}')" wire:key="{{$key}}">{{ $item }}</div>
                                         @empty
-                                            <div class="p-2">Buscando Elementos...</div>
+                                            <div class="p-2">{{ __('users.no_users') }}</div>
                                         @endforelse
                                     </div>
                                 @endif
@@ -58,10 +58,9 @@
                                     name="inputSelectSearch"
                                     id="inputSelectSearch"
                                     type="text"
-                                    placeholder="escribe tu búsqueda..."
+                                    placeholder="{{ __('users.search_placeholder') }}"
                                     wire:model.live="search">
                             </div>
-
                         </div>
                     </div>
                     <div class="flex justify-between space-x-2">
@@ -70,22 +69,22 @@
                                 <thead>
                                 <tr>
                                     <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider ">
-                                        Orden #
+                                        {{ __('users.order') }}
                                     </th>
                                     <th wire:click="sortBy('name')" class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider cursor-pointer">
-                                        Nombre @if($orderColumn == 'name') <i class="fas fa-sort-{{$orderDirection == 'asc' ? 'up' : 'down'}}"></i> @endif
+                                        {{ __('users.name') }} @if($orderColumn == 'name') <i class="fas fa-sort-{{$orderDirection == 'asc' ? 'up' : 'down'}}"></i> @endif
                                     </th>
                                     <th wire:click="sortBy('surname')" class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider cursor-pointer">
-                                        Apellido @if($orderColumn == 'surname') <i class="fas fa-sort-{{$orderDirection == 'asc' ? 'up' : 'down'}}"></i> @endif
+                                        {{ __('users.surname') }} @if($orderColumn == 'surname') <i class="fas fa-sort-{{$orderDirection == 'asc' ? 'up' : 'down'}}"></i> @endif
                                     </th>
                                     <th wire:click="sortBy('email')" class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider cursor-pointer">
-                                        Email @if($orderColumn == 'email') <i class="fas fa-sort-{{$orderDirection == 'asc' ? 'up' : 'down'}}"></i> @endif
+                                        {{ __('users.email') }} @if($orderColumn == 'email') <i class="fas fa-sort-{{$orderDirection == 'asc' ? 'up' : 'down'}}"></i> @endif
                                     </th>
                                     <th wire:click="sortBy('roles')" class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider cursor-pointer">
-                                        Rol @if($orderColumn == 'roles') <i class="fas fa-sort-{{$orderDirection == 'asc' ? 'up' : 'down'}}"></i> @endif
+                                        {{ __('users.role') }} @if($orderColumn == 'roles') <i class="fas fa-sort-{{$orderDirection == 'asc' ? 'up' : 'down'}}"></i> @endif
                                     </th>
                                     <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                                        Acciones
+                                        {{ __('users.actions') }}
                                     </th>
                                 </tr>
                                 </thead>
@@ -142,28 +141,28 @@
                                                 <div class="text-sm leading-5 text-gray-900">
                                                     <div class="flex items-center space-x-1">
                                                         <!-- Botón Editar Usuario -->
-                                                        <button title="Editar usuario" class="p-2 rounded bg-blue-500 text-white hover:bg-blue-600 focus:outline-none"  wire:click="openModal('edit', {{ $usuario->id }})">
+                                                        <button title="{{ __('users.edit_user') }}" class="p-2 rounded bg-blue-500 text-white hover:bg-blue-600 focus:outline-none"  wire:click="openModal('edit', {{ $usuario->id }})">
                                                             <i class="fas fa-edit"></i>
                                                         </button>
                                                         <!-- Botón Mostrar Usuario -->
-                                                        <button title="Mostrar usuario" class="p-2 rounded bg-green-500 text-white hover:bg-green-600 focus:outline-none" wire:click="openModal('show', {{$usuario->id}})">
+                                                        <button title="{{ __('users.show_user') }}" class="p-2 rounded bg-green-500 text-white hover:bg-green-600 focus:outline-none" wire:click="openModal('show', {{$usuario->id}})">
                                                             <i class="fas fa-eye"></i>
                                                         </button>
                                                         <!-- Botón Impersonar Usuario -->
                                                         @if($this->canImpersonate($usuario))
-                                                            <button title="Impersonar usuario" class="p-2 rounded bg-yellow-500 text-white hover:bg-yellow-600 focus:outline-none" wire:click="openModal('impersonate', {{ $usuario->id }})">
+                                                            <button title="{{ __('users.impersonate_user') }}" class="p-2 rounded bg-yellow-500 text-white hover:bg-yellow-600 focus:outline-none" wire:click="openModal('impersonate', {{ $usuario->id }})">
                                                                 <i class="fas fa-user-secret"></i>
                                                             </button>
                                                         @endif
                                                         <!-- Botón Borrar Usuario -->
                                                         @if($currentFilter != 'deleted')
-                                                            <button title="Borrar usuario" class="p-2 rounded bg-red-500 text-white hover:bg-red-600 focus:outline-none" wire:click="openModal('delete',{{$usuario->id}})">
+                                                            <button title="{{ __('users.delete_user') }}" class="p-2 rounded bg-red-500 text-white hover:bg-red-600 focus:outline-none" wire:click="openModal('delete',{{$usuario->id}})">
                                                                 <i class="fas fa-trash-alt"></i>
                                                             </button>
                                                         @endif
                                                         <!-- Botón Restablecer Usuario -->
                                                         @if($currentFilter == 'deleted')
-                                                            <button title="Restablecer usuario" class="p-2 rounded bg-orange-500 text-white hover:bg-orange-600 focus:outline-none" wire:click="openModal('restore', {{ $usuario->id }})">
+                                                            <button title="{{ __('users.restore_user') }}" class="p-2 rounded bg-orange-500 text-white hover:bg-orange-600 focus:outline-none" wire:click="openModal('restore', {{ $usuario->id }})">
                                                                 <i class="fas fa-recycle"></i>
                                                             </button>
                                                         @endif
@@ -176,7 +175,7 @@
                                     <tr>
                                         <td class="px-6 py-4 whitespace-no-wrap" colspan="6">
                                             <div class="text-sm leading-5 text-gray-900">
-                                                No hay usuarios
+                                                {{ __('users.no_users') }}
                                             </div>
                                         </td>
                                     </tr>
@@ -194,11 +193,11 @@
         </div>
     </div>
 
-<!-- Modales (ejemplos) -->
+    <!-- Modales (ejemplos) -->
     @if($modalCreate)
         <x-dialog-modal wire:model="modalCreate" :maxWidth="'full'">
             <x-slot name="title">
-                Crear Usuario
+                {{ __('users.create_user') }}
             </x-slot>
             <x-slot name="content">
                 <livewire:users.create-user />
@@ -210,7 +209,7 @@
     @if($modalEdit)
         <x-dialog-modal wire:model="modalEdit" :maxWidth="'full'">
             <x-slot name="title">
-                Editar Usuario
+                {{ __('users.edit_user') }}
             </x-slot>
             <x-slot name="content">
                 <livewire:users.edit-user :user="$user"/>
@@ -222,7 +221,7 @@
     @if($modalShow)
         <x-dialog-modal wire:model="modalShow" :maxWidth="'full'">
             <x-slot name="title">
-                Mostrar Usuario
+                {{ __('users.show_user') }}
             </x-slot>
             <x-slot name="content">
                 <livewire:users.user-show :user="$user"/>
@@ -234,18 +233,17 @@
     @if($modalImpersonate)
         <x-dialog-modal wire:model="modalImpersonate" :maxWidth="'sm'">
             <x-slot name="title">
-                Impersonar al Usuario {{ $user->name }} {{ $user->surname }}
+                {{ __('users.impersonate_user') }} {{ $user->name }} {{ $user->surname }}
             </x-slot>
             <x-slot name="content">
-                Deseas Impersonar al Usuario {{ $user->name }} {{ $user->surname }}, recuerda que al hacerlo perderás tu sesión actual volverás al Dashboard y solo podrás ver lo que tenga permiso dicho usuario.
-                De igual forma todas tus acciones que supongan una grabación de datos se guardarán en el usuario que estás impersonando, pero quedará un registro en los Logs de tu usuario original.
+                {{ __('users.impersonate_confirmation', ['name' => $user->name, 'surname' => $user->surname]) }}
             </x-slot>
             <x-slot name="footer">
                 <x-button wire:click="impersonateUser" class="bg-blue-500 mr-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                    Impersonar
+                    {{ __('users.impersonate') }}
                 </x-button>
                 <x-danger-button wire:click="closeModal('impersonate')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
-                    Cancelar
+                    {{ __('users.cancel') }}
                 </x-danger-button>
             </x-slot>
         </x-dialog-modal>
@@ -254,17 +252,17 @@
     @if($modalDelete)
         <x-dialog-modal wire:model="modalDelete" :maxWidth="'sm'">
             <x-slot name="title">
-                Borrar al Usuario {{ $user->name }} {{ $user->surname }}
+                {{ __('users.delete_user') }} {{ $user->name }} {{ $user->surname }}
             </x-slot>
             <x-slot name="content">
-                ¿Deseas borrar al Usuario {{ $user->name }} {{ $user->surname }}? Recuerda que esta es una acción de riesgo ya que la información de ese usuario podría perderse.
+                {{ __('users.delete_confirmation', ['name' => $user->name, 'surname' => $user->surname]) }}
             </x-slot>
             <x-slot name="footer">
                 <x-button wire:click="closeModal('delete')" class="bg-blue-500 mr-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                    Cancelar
+                    {{ __('users.cancel') }}
                 </x-button>
                 <x-danger-button wire:click="delete()" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
-                    Eliminar
+                    {{ __('users.delete') }}
                 </x-danger-button>
             </x-slot>
         </x-dialog-modal>
@@ -273,17 +271,17 @@
     @if($modalRestore)
         <x-dialog-modal wire:model="modalRestore" :maxWidth="'sm'">
             <x-slot name="title">
-                Restaurar al Usuario {{ $user->name }} {{ $user->surname }}
+                {{ __('users.restore_user') }} {{ $user->name }} {{ $user->surname }}
             </x-slot>
             <x-slot name="content">
-                ¿Deseas restaurar al Usuario {{ $user->name }} {{ $user->surname }}?
+                {{ __('users.restore_confirmation', ['name' => $user->name, 'surname' => $user->surname]) }}
             </x-slot>
             <x-slot name="footer">
                 <x-button wire:click="restore()" class="bg-blue-500 mr-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                    Restaurar
+                    {{ __('users.restore') }}
                 </x-button>
                 <x-danger-button wire:click="closeModal('impersonate')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
-                    Cancelar
+                    {{ __('users.cancel') }}
                 </x-danger-button>
             </x-slot>
         </x-dialog-modal>

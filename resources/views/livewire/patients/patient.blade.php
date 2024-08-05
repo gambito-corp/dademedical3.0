@@ -1,7 +1,7 @@
 <div>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('patient.Patients Panel') }}
+            {{ __('paciente.Patients Panel') }}
         </h2>
     </x-slot>
     <div class="py-4">
@@ -11,17 +11,17 @@
                     <div class="flex justify-end space-x-2">
                         <button
                             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-xl"
-                            title="Crear Usuario"
+                            title="{{ __('paciente.Add Patient') }}"
                             wire:click="openModal('create')">
                             <i class="fas fa-plus"></i>
                         </button>
                     </div>
                     <div class="flex justify-between space-x-2">
                         <div class="{{ $currentFilter == 'active' ? 'bg-blue-700 text-white' : 'bg-white text-blue-500 border border-blue-500 hover:text-white hover:border-0 ' }} w-1/2 p-2 hover:bg-blue-700 font-bold py-2 px-4 rounded-xl transition-all duration-300" wire:click="changePatient('active')">
-                            <span>Pacientes Activos</span>
+                            <span>{{ __('paciente.Active Patients') }}</span>
                         </div>
                         <div class="{{ $currentFilter == 'inactive' ? 'bg-blue-700 text-white' : 'bg-white text-blue-500 border border-blue-500 hover:text-white hover:border-0 ' }} w-1/2 p-2 hover:bg-blue-700 font-bold py-2 px-4 rounded-xl transition-all duration-300" wire:click="changePatient('inactive')">
-                            <span>Pacientes Inactivos</span>
+                            <span>{{ __('paciente.Inactive Patients') }}</span>
                         </div>
                     </div>
                     <div class="flex justify-between space-x-2">
@@ -33,7 +33,7 @@
                                     name="inputSelect"
                                     id="inputSelect"
                                     type="text"
-                                    placeholder="Paginación"
+                                    placeholder="{{ __('Pagination') }}"
                                     wire:model="paginate"
                                     wire:click.self="showPagination">
                                 @if($showDropdown)
@@ -41,7 +41,7 @@
                                         @forelse($paginacion as $key => $item)
                                             <div class="p-2 hover:bg-gray-100" wire:click="selectedPaginate('{{ $item }}')" wire:key="{{$key}}">{{ $item }}</div>
                                         @empty
-                                            <div class="p-2">Buscando Elementos...</div>
+                                            <div class="p-2">{{ __('Searching Elements') }}</div>
                                         @endforelse
                                     </div>
                                 @endif
@@ -55,7 +55,7 @@
                                     name="inputSelectSearch"
                                     id="inputSelectSearch"
                                     type="text"
-                                    placeholder="escribe tu búsqueda..."
+                                    placeholder="{{ __('Enter your search') }}"
                                     wire:model.live="search">
                             </div>
                         </div>
@@ -66,28 +66,28 @@
                                 <thead>
                                 <tr>
                                     <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider ">
-                                        Orden #
+                                        {{ __('paciente.Order') }} #
                                     </th>
                                     <th wire:click="sortBy('name')" class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider cursor-pointer">
-                                        Nombre @if($orderColumn == 'name') <i class="fas fa-sort-{{$orderDirection == 'asc' ? 'up' : 'down'}}"></i> @endif
+                                        {{ __('paciente.Name') }} @if($orderColumn == 'name') <i class="fas fa-sort-{{$orderDirection == 'asc' ? 'up' : 'down'}}"></i> @endif
                                     </th>
                                     <th wire:click="sortBy('surname')" class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider cursor-pointer">
-                                        Apellido @if($orderColumn == 'surname') <i class="fas fa-sort-{{$orderDirection == 'asc' ? 'up' : 'down'}}"></i> @endif
+                                        {{ __('paciente.Surname') }} @if($orderColumn == 'surname') <i class="fas fa-sort-{{$orderDirection == 'asc' ? 'up' : 'down'}}"></i> @endif
                                     </th>
                                     <th wire:click="sortBy('dni')" class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider cursor-pointer">
-                                        Dni @if($orderColumn == 'dni') <i class="fas fa-sort-{{$orderDirection == 'asc' ? 'up' : 'down'}}"></i> @endif
+                                        {{ __('paciente.DNI') }} @if($orderColumn == 'dni') <i class="fas fa-sort-{{$orderDirection == 'asc' ? 'up' : 'down'}}"></i> @endif
                                     </th>
                                     <th wire:click="sortBy('hospital_nombre')" class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider cursor-pointer">
-                                        Sede @if($orderColumn == 'hospital_nombre') <i class="fas fa-sort-{{$orderDirection == 'asc' ? 'up' : 'down'}}"></i> @endif
+                                        {{ __('paciente.Site') }} @if($orderColumn == 'hospital_nombre') <i class="fas fa-sort-{{$orderDirection == 'asc' ? 'up' : 'down'}}"></i> @endif
                                     </th>
                                     <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                                        Acciones
+                                        {{ __('paciente.Actions') }}
                                     </th>
                                 </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
                                 @forelse($data as $key => $item)
-                                    <tr wire:key="usuario-{{ $item->id }}">
+                                    <tr wire:key="paciente-{{ $item->id }}">
                                         <td class="px-6 py-4 whitespace-no-wrap">
                                             <div class="flex items-center">
                                                 <div>
@@ -137,15 +137,12 @@
                                             <div class="flex items-center">
                                                 <div class="text-sm leading-5 text-gray-900">
                                                     <div class="flex items-center space-x-1">
-{{--                                                        Ver Paciente--}}
-{{--                                                        Incidencias--}}
-{{--                                                        Edicion--}}
-{{--                                                        Cambio de Direccion--}}
-{{--                                                        Aprobar Cambio de Direccion--}}
-{{--                                                        Cambio de Dosis--}}
-{{--                                                        Aprobar Cambio de Dosis--}}
-{{--                                                        Recojo de Equipo--}}
-{{--                                                        Revertir Recojo de Equipo (En inactivos)--}}
+                                                        <button
+                                                            class="text-green-500 hover:text-green-700"
+                                                            title="{{ __('paciente.Edit Patient') }}"
+                                                            wire:click="openModal('edit', {{ $item->id }})">
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -155,7 +152,7 @@
                                     <tr>
                                         <td class="px-6 py-4 whitespace-no-wrap" colspan="6">
                                             <div class="text-sm leading-5 text-gray-900">
-                                                No hay Pacientes para mostrar
+                                                {{ __('paciente.No patients to show') }}
                                             </div>
                                         </td>
                                     </tr>
@@ -176,7 +173,7 @@
     @if($modalCreate)
         <x-dialog-modal wire:model="modalCreate" :maxWidth="'full'">
             <x-slot name="title">
-                Ingresar Nuevo Paciente
+                {{ __('paciente.Add Patient') }}
             </x-slot>
             <x-slot name="content">
                 <livewire:patients.create-patient />
@@ -188,11 +185,13 @@
     @if($modalEdit)
         <x-dialog-modal wire:model="modalEdit" :maxWidth="'full'">
             <x-slot name="title">
-                Editar Usuario
+                {{ __('paciente.Edit') }}
             </x-slot>
             <x-slot name="content">
-                <livewire:users.edit-user :user="$user"/>
+                <livewire:patients.edit-patient :patientId="$paciente->id"/>
             </x-slot>
+{{--            <x-slot name="content">--}}
+{{--            </x-slot>--}}
             <x-slot name="footer"></x-slot>
         </x-dialog-modal>
     @endif
@@ -200,10 +199,10 @@
     @if($modalShow)
         <x-dialog-modal wire:model="modalShow" :maxWidth="'full'">
             <x-slot name="title">
-                Mostrar Usuario
+                {{ __('paciente.Show Patient') }}
             </x-slot>
             <x-slot name="content">
-                <livewire:users.user-show :user="$user"/>
+                <livewire:patients.patient-show :patient="$patient"/>
             </x-slot>
             <x-slot name="footer"></x-slot>
         </x-dialog-modal>
@@ -212,39 +211,19 @@
     @if($modalDelete)
         <x-dialog-modal wire:model="modalDelete" :maxWidth="'sm'">
             <x-slot name="title">
-                Borrar al Usuario {{ $user->name }} {{ $user->surname }}
+                {{ __('paciente.Delete Patient') }} {{ $patient->name }} {{ $patient->surname }}
             </x-slot>
             <x-slot name="content">
-                ¿Deseas borrar al Usuario {{ $user->name }} {{ $user->surname }}? Recuerda que esta es una acción de riesgo ya que la información de ese usuario podría perderse.
+                {{ __('paciente.Are you sure you want to delete this patient?') }} {{ $patient->name }} {{ $patient->surname }}?
             </x-slot>
             <x-slot name="footer">
                 <x-button wire:click="closeModal('delete')" class="bg-blue-500 mr-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                    Cancelar
+                    {{ __('paciente.Cancel') }}
                 </x-button>
                 <x-danger-button wire:click="delete()" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
-                    Eliminar
+                    {{ __('paciente.Delete') }}
                 </x-danger-button>
             </x-slot>
         </x-dialog-modal>
     @endif
-
-{{--    @if($modalRestore)--}}
-{{--        <x-dialog-modal wire:model="modalRestore" :maxWidth="'sm'">--}}
-{{--            <x-slot name="title">--}}
-{{--                Restaurar al Usuario {{ $user->name }} {{ $user->surname }}--}}
-{{--            </x-slot>--}}
-{{--            <x-slot name="content">--}}
-{{--                ¿Deseas restaurar al Usuario {{ $user->name }} {{ $user->surname }}?--}}
-{{--            </x-slot>--}}
-{{--            <x-slot name="footer">--}}
-{{--                <x-button wire:click="restore()" class="bg-blue-500 mr-4 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">--}}
-{{--                    Restaurar--}}
-{{--                </x-button>--}}
-{{--                <x-danger-button wire:click="closeModal('impersonate')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">--}}
-{{--                    Cancelar--}}
-{{--                </x-danger-button>--}}
-{{--            </x-slot>--}}
-{{--        </x-dialog-modal>--}}
-{{--    @endif--}}
-
 </div>

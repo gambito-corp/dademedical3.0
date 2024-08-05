@@ -3,12 +3,13 @@ namespace App\Repositories\Paciente;
 
 use App\Interfaces\Paciente\PacienteInterface;
 use App\Models\Paciente;
+use App\Services\Logs\LogService;
 use GuzzleHttp\Client;
 use Illuminate\Support\Collection;
 
 class PacienteRepository implements PacienteInterface
 {
-    public function __construct(protected Paciente $pacientes){}
+    public function __construct(protected Paciente $pacientes, protected LogService $logService){}
 
     public function query($orderColumn = 'id', $orderDirection = 'desc')
     {
@@ -78,9 +79,9 @@ class PacienteRepository implements PacienteInterface
         return $this->pacientes->onlyTrashed()->get();
     }
 
-    public function create(array $data): Paciente|Collection|null
+    public function save(array $data): Paciente|Collection|null
     {
-        return $this->pacientes->create($data);
+        return $this->pacientes->updateOrCreate(['dni' => $data['dni']], $data);
     }
 
     public function checkReniec($dni)
@@ -101,21 +102,27 @@ class PacienteRepository implements PacienteInterface
         $res = $client->request('GET', 'v2/reniec/dni', $parameters);
 
         if ($res->getStatusCode() != 200) {
-//            dd($res->getBody()->getContents());
+            $this->logService->create('Error al consultar Reniec. Código: ' . $res->getStatusCode(), 'error');
             throw new \Exception("Error al consultar Reniec. Código: " . $res->getStatusCode());
         }
 
         $response = json_decode($res->getBody()->getContents(), true);
-        dd($response);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
+            $this->logService->create('Error al decodificar la respuesta de Reniec: ' . json_last_error_msg(), 'error');
             throw new \Exception("Error al decodificar la respuesta de Reniec: " . json_last_error_msg());
         }
 
         if (!isset($response['nombres'], $response['apellidoPaterno'], $response['apellidoMaterno'])) {
+            $this->logService->create('La respuesta de Reniec no contiene los campos esperados. Verifique el token de Reniec y avise al administrador del sistema.', 'error');
             throw new \Exception("La respuesta de Reniec no contiene los campos esperados. Verifique el token de Reniec y avise al administrador del sistema.");
         }
 
         return $response;
+    }
+
+    public function findByDni($dni): Paciente|Collection|null
+    {
+        return $this->paciente->where('dni', $dni)->first();
     }
 }
