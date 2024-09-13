@@ -21,4 +21,6 @@ interface PacienteInterface
     public function save(array $data): Paciente|Collection|null;
 
     public function checkReniec($dni);
+
+    public function update(array $data);
 }

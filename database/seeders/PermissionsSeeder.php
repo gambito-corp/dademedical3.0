@@ -37,6 +37,12 @@ class PermissionsSeeder extends Seeder
             'borrar-pacientes',
             'restaurar-pacientes',
             'eliminar-pacientes',
+            'solicitar-dosis',
+            'aprobar-dosis',
+            'solicitar-direccion',
+            'aprobar-direccion',
+            'abrir-incidencia',
+            'dar-alta',
             // Roles y Permisos
             'ver-roles',
             'crear-roles',

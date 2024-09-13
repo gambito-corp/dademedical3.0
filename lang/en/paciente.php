@@ -44,4 +44,10 @@ return [
     'No patients to show' => 'No patients to show',
     'Add Patient' => 'Create Patient',
     'Edit' => 'Edit Patient',
+    'Request Dose Change' => 'Request Dose Change',
+    'Approve Dose Change' => 'Approve Dose Change',
+    'Request Address Change' => 'Request Address Change',
+    'Approve Address Change' => 'Approve Address Change',
+    'Open Incident' => 'Open Incident',
+    'Discharge Patient' => 'Discharge Patient',
 ];

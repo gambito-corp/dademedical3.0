@@ -39,12 +39,12 @@ class Contrato extends Model
 
     public function diagnostico()
     {
-        return $this->hasOne(Diagnostico::class);
+        return $this->hasOne(Diagnostico::class)->latest('id');
     }
 
     public function direccion()
     {
-        return $this->hasOne(Direccion::class);
+        return $this->hasOne(Direccion::class)->latest('id');
     }
 
     public function telefonos()

@@ -24,8 +24,10 @@ class DireccionRepository implements DireccionInterface
         return $this->direccion->create($data);
     }
 
-    public function update($data, $id)
-    {}
+    public function update($data)
+    {
+        return $data->save();
+    }
 
     public function delete($id)
     {}

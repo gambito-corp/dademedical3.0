@@ -11,9 +11,14 @@ class TelefonoRepository implements TelefonoInterface
     public function __construct(private Telefono $telefono)
     {
     }
-    public function getTelefono(){}
 
-    public function getTelefonoById($id){}
+    public function getTelefono()
+    {
+    }
+
+    public function getTelefonoById($id)
+    {
+    }
 
     public function save($data, $id)
     {
@@ -26,7 +31,13 @@ class TelefonoRepository implements TelefonoInterface
         }
     }
 
-    public function update($data, $id){}
+    public function update($data, $id)
+    {
+    }
 
-    public function delete($id){}
+    public function delete($id)
+    {
+        $this->telefono->query()->where('id', $id)->delete();
+    }
 }
+

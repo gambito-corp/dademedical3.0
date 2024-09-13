@@ -239,6 +239,7 @@ class CreatePatient extends Component
         $this->paciente['telefonos'] = $this->telefonos;
         $this->paciente['reingreso'] = $this->reingreso;
 
+
         $this->patientService->create($this->paciente);
 
         $this->reset('paciente', 'telefonos');

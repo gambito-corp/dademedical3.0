@@ -45,7 +45,11 @@ class PacienteService
                         $q->whereHas('hospital', function($q) use ($search) {
                             $q->where('nombre', 'like', "%{$search}%");
                         });
-                    });
+                    })->orWhereRaw("(CASE
+                        WHEN origen = 1 THEN 'Consulta Externa'
+                        WHEN origen = 2 THEN 'UDO'
+                        ELSE ''
+                    END) LIKE ?", ["%{$search}%"]);
             });
         }
 
@@ -85,11 +89,17 @@ class PacienteService
         $this->redirigirServiceTelefonos($data);
         $this->redirigirServiceDiagnostico($data);
         $this->redirigirServiceArchivos($data);
-
-
         return $this->pacienteRepository->find($data['paciente_id']);
     }
-
+    public function edit(array $data)
+    {
+        $paciente = $this->update($data);
+        if ($paciente) {
+            $this->redirigirServiceDireccionUpdate($data);
+            $this->redirigirServiceTelefonosUpdate($data);
+            $this->redirigirServiceArchivosUpdate($data);
+        }
+    }
     public function checkReniec($dni)
     {
         return $this->pacienteRepository->checkReniec($dni);
@@ -165,5 +175,34 @@ class PacienteService
             'active' => 1,
         ];
         return $this->pacienteRepository->save(data: $infoPaciente);
+    }
+
+    private function update(array $data)
+    {
+        return $this->pacienteRepository->update($data);
+    }
+
+    private function redirigirServiceDireccionUpdate(array $data)
+    {
+        $infoDireccion = [
+            'patientId' => $data['patientId'],
+            'responsable' => Str::title($data['familiar_responsable']),
+        ];
+
+        return $this->direccionService->update(direccion: $infoDireccion);
+    }
+
+    private function redirigirServiceTelefonosUpdate(array $data)
+    {
+        $this->telefonoService->update(telefonos: $data['telefonos'], patientId: $data['patientId']);
+    }
+
+    private function redirigirServiceArchivosUpdate(array $data)
+    {
+        $paciente = Paciente::query()->with('contrato')->findOrFail($data['patientId']);
+        $infoArchivos = [
+            'otros' => $data['otros'] ?? null,
+        ];
+        $this->archivoService->save(archivos: $infoArchivos, contractId: $paciente->contrato->id, patientId: $paciente->id, name: $data['nombres'], surname: $data['apellidos']);
     }
 }

@@ -10,7 +10,18 @@ class Patient extends Component
 {
     protected PacienteService $patientService;
     public $pacientes, $paciente;
-    public bool $modalCreate = false, $modalEdit = false, $modalShow = false, $modalDelete = false, $showDropdown = false;
+    public bool
+        $modalCreate = false,
+        $modalEdit = false,
+        $modalShow = false,
+        $modalDelete = false,
+        $showDropdown = false,
+        $modalChangeDoseRequest = false,
+        $modalChangeDoseApproval = false,
+        $modalChangeDirecctionRequest = false,
+        $modalChangeDirecctionApproval = false,
+        $modalIncidence = false,
+        $modalAlta = false;
 
     public function boot(PacienteService $patientService) : void
     {
@@ -20,7 +31,7 @@ class Patient extends Component
     public function mount() : void
     {
         parent::mount();
-        $this->paciente = null; // Inicializar la variable $paciente
+        $this->paciente = null;
     }
 
     public function render()
@@ -56,6 +67,12 @@ class Patient extends Component
             'edit' => $this->modalEdit = true,
             'show' => $this->modalShow = true,
             'delete' => $this->modalDelete = true,
+            'changeDose' => $this->modalChangeDoseRequest = true,
+            'aproveDose' => $this->modalChangeDoseApproval = true,
+            'changeDirecction' => $this->modalChangeDirecctionRequest = true,
+            'aproveDirecction' => $this->modalChangeDirecctionApproval = true,
+            'incidence' => $this->modalIncidence = true,
+            'alta' => $this->modalAlta = true,
             default => null,
         };
     }
@@ -72,6 +89,12 @@ class Patient extends Component
             'edit' => $this->modalEdit = false,
             'show' => $this->modalShow = false,
             'delete' => $this->modalDelete = false,
+            'changeDose' => $this->modalChangeDoseRequest = false,
+            'aproveDose' => $this->modalChangeDoseApproval = false,
+            'changeDirecction' => $this->modalChangeDirecctionRequest = false,
+            'aproveDirecction' => $this->modalChangeDirecctionApproval = false,
+            'incidence' => $this->modalIncidence = false,
+            'alta' => $this->modalAlta = false,
             default => null,
         };
     }
@@ -82,5 +105,11 @@ class Patient extends Component
         $this->modalEdit = false;
         $this->modalShow = false;
         $this->modalDelete = false;
+        $this->modalChangeDoseRequest = false;
+        $this->modalChangeDoseApproval = false;
+        $this->modalChangeDirecctionRequest = false;
+        $this->modalChangeDirecctionApproval = false;
+        $this->modalIncidence = false;
+        $this->modalAlta = false;
     }
 }

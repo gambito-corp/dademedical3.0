@@ -123,6 +123,14 @@ class PacienteRepository implements PacienteInterface
 
     public function findByDni($dni): Paciente|Collection|null
     {
-        return $this->paciente->where('dni', $dni)->first();
+        return $this->pacientes->where('dni', $dni)->first();
+    }
+
+    public function update(array $data)
+    {
+        $paciente = $this->pacientes->where('id', $data['patientId'])->first();
+        $paciente->edad = $data['edad'];
+        $paciente->origen= $data['tipo_origen'];
+        return $paciente->save();
     }
 }

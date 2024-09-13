@@ -44,4 +44,10 @@ return [
     'No patients to show' => 'No hay Pacientes para mostrar',
     'Add Patient' => 'Crear Paciente',
     'Edit' => 'Editar Paciente',
+    'Request Dose Change' => 'Solicitar Cambio de Dosis',
+    'Approve Dose Change' => 'Aprobar Cambio de Dosis',
+    'Request Address Change' => 'Solicitar Cambio de Dirección',
+    'Approve Address Change' => 'Aprobar Cambio de Dirección',
+    'Open Incident' => 'Abrir Incidencia',
+    'Discharge Patient' => 'Dar de Alta al Paciente',
 ];

@@ -37,6 +37,16 @@ class Paciente extends Model
         'active',
     ];
 
+    //accesor
+    public function getFullNameAttribute()
+    {
+        return "{$this->name} {$this->surname}";
+    }
+    public function getOriginAttribute()
+    {
+        return $this->origen == 1 ? 'Consulta externa' : 'UDO';
+    }
+
     //Relaciones
     public function user(){
         return $this->belongsTo(User::class);
