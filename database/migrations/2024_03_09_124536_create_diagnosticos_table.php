@@ -16,7 +16,7 @@ return new class extends Migration
             $table->double('dosis');
             $table->integer('frecuencia');
             $table->string('comentarios')->nullable();
-            $table->string('active');
+            $table->boolean('active');
             $table->datetime('fecha_cambio')->nullable();
             $table->timestamps();
         });

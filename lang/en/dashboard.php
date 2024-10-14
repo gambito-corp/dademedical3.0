@@ -12,4 +12,7 @@ return [
     'profile' => 'Profile',
     'api_tokens' => 'API Tokens',
     'logout' => 'Log Out',
+    'Incidences' => 'Incidences',
+    'Inventory' => 'Inventory',
+    'Contracts' => 'Contracts',
 ];

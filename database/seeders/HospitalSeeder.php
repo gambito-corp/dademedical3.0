@@ -31,8 +31,9 @@ class HospitalSeeder extends Seeder
             ]);
 
             // Crear 3 IBT con estado Inactivo
-            Hospital::factory()->count(3)->create([
+            Hospital::factory()->create([
                 'acronimo' => 'IBT',
+                'nombre' => 'IBT',
                 'direccion' => 'Dirección inventada',
                 'estado' => false,
             ]);
@@ -40,8 +41,9 @@ class HospitalSeeder extends Seeder
             // Crear 4 hospital Barton con estado Activo y padre IBT
             $ibt = Hospital::where('nombre', 'IBT')->first();
             if ($ibt) {
-                Hospital::factory()->count(4)->create([
+                Hospital::factory()->create([
                     'acronimo' => 'Barton',
+                    'nombre' => 'Hospital Barton',
                     'estado' => true,
                     'parent_id' => $ibt->id,
                 ]);
@@ -49,21 +51,13 @@ class HospitalSeeder extends Seeder
 
             // Crear 5 hospital Kaelin con estado Activo y padre IBT
             if ($ibt) {
-                Hospital::factory()->count(5)->create([
+                Hospital::factory()->create([
                     'acronimo' => 'Kaelin',
+                    'nombre' => 'Hospital Kaelin',
                     'estado' => true,
                     'parent_id' => $ibt->id,
                 ]);
             }
-
-            // Crear 10 hospitales adicionales con padres inventados
-            Hospital::factory()->count(10)->create([
-                'acronimo' => 'Hospital' . rand(100, 999),
-                'direccion' => 'Dirección inventada',
-                'estado' => rand(0, 1) ? true : false,
-            ]);
-
-            // Confirma las transacciones si no hay errores
             DB::commit();
         } catch (\Exception $e) {
             // Revierte las transacciones si ocurre algún error

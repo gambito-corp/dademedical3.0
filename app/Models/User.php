@@ -50,6 +50,14 @@ class User extends Authenticatable
     {
         return $this->name;
     }
+    public function getObtenerApellidoAttribute()
+    {
+        return $this->surname;
+    }
+    public function getFullNameAttribute()
+    {
+        return "{$this->name} {$this->surname}";
+    }
     public function getRelacionRolesAttribute()
     {
         $roles = optional($this->roles);

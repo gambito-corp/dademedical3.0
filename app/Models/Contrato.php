@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+
 class Contrato extends Model
 {
     use HasFactory;
@@ -34,13 +35,35 @@ class Contrato extends Model
 
     public function archivos()
     {
-        return $this->hasMany(Archivo::class);
+        return $this->belongsToMany(Archivo::class, 'contrato_archivos', 'contrato_id', 'archivo_id')
+            ->withTimestamps();
     }
 
+    public function diagnosticos()
+    {
+        return $this->hasMany(Diagnostico::class);
+    }
     public function diagnostico()
     {
         return $this->hasOne(Diagnostico::class)->latest('id');
     }
+    public function diagnosticosPendientes()
+    {
+        return $this->diagnosticos()->where('active', 0);
+    }
+    public function diagnosticosAprobados()
+    {
+        return $this->diagnosticos()->where('active', 1);
+    }
+    public function ultimoDiagnosticoPendiente()
+    {
+        return $this->diagnosticosPendientes()->latest('id')->first();
+    }
+    public function ultimoDiagnosticoAprobado()
+    {
+        return $this->diagnosticosAprobados()->latest('id')->first();
+    }
+
 
     public function direccion()
     {
@@ -58,5 +81,11 @@ class Contrato extends Model
     public function contratoFechas()
     {
         return $this->hasOne(ContratoFechas::class);
+    }
+
+    // Relación con la tabla contrato_productos
+    public function productos(): HasMany
+    {
+        return $this->hasMany(ContratoProducto::class);
     }
 }

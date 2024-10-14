@@ -7,6 +7,7 @@ use App\Models\Diagnostico;
 use App\Models\Paciente;
 use App\Services\Archivo\ArchivoService;
 use App\Services\Paciente\PacienteService;
+use Illuminate\Support\Facades\DB;
 
 class DiagnosticoService
 {
@@ -36,6 +37,7 @@ class DiagnosticoService
 
     public function newDiagnostico($patient, $file)
     {
+        DB::beginTransaction();
         $diagnostico = [
             "contrato_id"       => $patient['contrato_id'],
             "historia_clinica"  => $patient['historia_clinica'],
@@ -47,8 +49,13 @@ class DiagnosticoService
             "fecha_cambio"      => now(),
         ];
 
+        //borrar diagnostico pendientes no Aprobados
+
+        $deleted = $this->diagnosticoRepository->deletePending($patient['contrato_id']);
         $this->diagnosticoRepository->save($diagnostico);
-        $this->archivoService->save(['solicitud_oxigenoterapia' => $file], $diagnostico["contrato_id"], $patient['paciente_id'], $patient['nombre'], $patient['apellido']);
+        $this->archivoService->save(['documento_de_cambio_de_dosis' => $file], $diagnostico["contrato_id"], $patient['paciente_id'], $patient['nombre'], $patient['apellido']);
+
+        DB::commit();
     }
 
 }

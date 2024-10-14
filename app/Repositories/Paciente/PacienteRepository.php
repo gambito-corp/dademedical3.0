@@ -24,6 +24,8 @@ class PacienteRepository implements PacienteInterface
             $query->orderBy($orderColumn, $orderDirection);
         }
 
+
+
         return $query;
     }
 

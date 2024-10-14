@@ -164,15 +164,19 @@
                                                             <i class="fas fa-syringe"></i>
                                                         </button>
 
-                                                       {{-- <!-- Botón para aprobar un cambio de dosis -->
+                                                        <!-- Botón para aprobar un cambio de dosis -->
                                                         @can('aprobar-dosis')
-                                                            <button
-                                                                class="text-indigo-500 hover:text-indigo-700"
-                                                                title="{{ __('paciente.Approve Dose Change') }}"
-                                                                wire:click="openModal('aproveDose', {{ $item->id }})">
-                                                                <i class="fas fa-check-circle"></i>
-                                                            </button>
+                                                            @if($item->diagnosticoPendiente)
+                                                                <button
+                                                                    class="text-indigo-500 hover:text-indigo-700"
+                                                                    title="{{ __('paciente.Approve Dose Change') }}"
+                                                                    wire:click="openModal('aproveDose', {{ $item->id }})">
+                                                                    <i class="fas fa-check-circle"></i>
+                                                                </button>
+                                                            @endif
                                                         @endcan
+
+                                                        {{--
                                                         <!-- Botón para solicitar un cambio de dirección -->
                                                         <button
                                                             class="text-yellow-500 hover:text-yellow-700"
@@ -305,17 +309,18 @@
         </x-dialog-modal>
     @endif
 
-    {{--@if($modalChangeDoseApproval)
+    @if($modalChangeDoseApproval)
         <x-dialog-modal wire:model="modalChangeDoseApproval" :maxWidth="'full'">
             <x-slot name="title">
                 {{ __('paciente.Approve Dose Change') }}
             </x-slot>
             <x-slot name="content">
-
+                <livewire:patients.approve-dose :patient-id="$paciente->id"/>
             </x-slot>
             <x-slot name="footer"></x-slot>
         </x-dialog-modal>
     @endif
+    {{--
     @if($modalChangeDirecctionRequest)
         <x-dialog-modal wire:model="modalChangeDirecctionRequest" :maxWidth="'full'">
             <x-slot name="title">

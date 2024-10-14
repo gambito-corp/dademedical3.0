@@ -1,6 +1,11 @@
 <?php
 
+use App\Http\Controllers\ArchivoController;
 use App\Http\Controllers\DashboardController;
+use App\Livewire\Contracts\Contract;
+use App\Livewire\Contracts\ContractShow;
+use App\Livewire\Incidences\Incidence;
+use App\Livewire\Inventory\Inventory;
 use App\Livewire\Patients\Patient;
 use App\Livewire\Users\User;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -8,9 +13,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\NewPasswordController;
 
-// Rutas generales.
+// redireccion forzosa a la pagina de login
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/login');
 });
 
 // Rutas de autenticación.
@@ -23,6 +28,10 @@ Route::middleware(['auth', 'verified', 'web'])->group(function () {
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
     Route::get('/users', User::class)->name('usuarios.index');
     Route::get('/patients', Patient::class)->name('patients.index');
+    Route::get('/incidences', Incidence::class)->name('incidences.index');
+    Route::get('/inventory', Inventory::class)->name('inventory.index');
+    Route::get('/contracts', Contract::class)->name('contracts.index');
+    Route::get('/contract/show/{contract}', ContractShow::class)->name('contracts.show');
 });
 
 // Rutas de verificación de correo electrónico.
@@ -39,3 +48,7 @@ Route::post('/email/verification-notification', function (Request $request) {
     $request->user()->sendEmailVerificationNotification();
     return back()->with('message', 'Verification link sent!');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+
+use Illuminate\Support\Facades\Storage;
+
+Route::get('/archives/{filename}', [ArchivoController::class, 'getUrl'])->name('archives.show');

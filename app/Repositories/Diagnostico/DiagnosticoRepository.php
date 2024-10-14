@@ -25,4 +25,12 @@ class DiagnosticoRepository implements DiagnosticoInterface
 
     public function delete($id)
     {}
+
+    public function deletePending(mixed $contrato_id)
+    {
+        $diagnosticosPendientes = $this->diagnostico->where('contrato_id', $contrato_id)->where('active', 0)->get();
+        foreach ($diagnosticosPendientes as $diagnostico) {
+            $diagnostico->delete();
+        }
+    }
 }

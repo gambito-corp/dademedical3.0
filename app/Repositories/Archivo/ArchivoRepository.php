@@ -4,55 +4,53 @@ namespace App\Repositories\Archivo;
 
 use App\Interfaces\Archivo\ArchivoInterface;
 use App\Models\Archivo;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
+use App\Services\Contrato\ContratoService;
 
 class ArchivoRepository implements ArchivoInterface
 {
+    public function __construct(private Archivo $archivo, private ContratoService $contratoService) {}
 
-    public function __construct(private Archivo $archivo){}
+    // Función para crear un archivo en la base de datos
+    public function save($fileData): Archivo
+    {
+        $archivo =  $this->archivo->create($fileData);
+        $this->associateWithContract($archivo->id, $archivo->contrato_id);
+        return $archivo;
+    }
+
+    public function getArchivoById($id): ?Archivo
+    {
+        return $this->archivo->find($id);
+    }
+
+    public function deleteArchivoById($id)
+    {
+        return $this->archivo->destroy($id);
+    }
 
     public function getArchivo(string $filePath)
-    {}
-
-    public function getArchivoById($id)
-    {}
-
-    public function save($data, $contractId, $patientId, $patientName, $patientSurname)
     {
-
-        foreach ($data as $key => $file) {
-            if ($file instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile) {
-                $tipo = $this->getFileType($key);
-                $directory = Str::slug(strtolower($patientName . ' ' . $patientSurname . ' ' . $patientId)) . '/' . Str::slug(strtolower($tipo));
-                $path = $file->store($directory, 'archivos');
-
-                $this->archivo->create([
-                    'contrato_id' => $contractId,
-                    'paciente_id' => $patientId,
-                    'nombre' => $file->getClientOriginalName(),
-                    'ruta' => $path,
-                    'tipo' => $tipo,
-                ]);
-            }
-        }
-    }
-    private function getFileType(string $key): string
-    {
-        return match ($key) {
-            'solicitud_oxigenoterapia' => Archivo::TIPO_SOLICITUD_OXIGENOTERAPIA,
-            'declaracion_jurada' => Archivo::TIPO_DECLARACION_DOMICILIO,
-            'documento_identidad' => Archivo::TIPO_DNI_PACIENTE,
-            'documento_identidad_cuidador' => Archivo::TIPO_DNI_CUIDADOR,
-            'croquis' => Archivo::TIPO_CROQUIS_DIRECCION,
-            'otros' => Archivo::TIPO_OTROS,
-            default => 'desconocido',
-        };
+        // TODO: Implement getArchivo() method.
     }
 
     public function update($data, $id)
-    {}
+    {
+        // TODO: Implement update() method.
+    }
+
+    private function associateWithContract(int $archivoId, int $contractId)
+    {
+        $contrato = $this->contratoService->obtenerContrato($contractId);
+        $contrato->archivos()->attach($archivoId);  // Asociar el archivo con el contrato
+    }
+
+    public function detachedFile($contrato)
+    {
+        return $contrato->detach();
+    }
 
     public function delete($id)
-    {}
+    {
+        // TODO: Implement delete() method.
+    }
 }

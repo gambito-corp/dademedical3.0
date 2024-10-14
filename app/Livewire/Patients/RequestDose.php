@@ -3,9 +3,11 @@
 namespace App\Livewire\Patients;
 
 use AllowDynamicProperties;
+use App\Models\Archivo;
 use App\Models\Paciente;
 use App\Services\Diagnostico\DiagnosticoService;
 use App\Services\Paciente\PacienteService;
+use App\Services\Archivo\ArchivoService; // Importar el servicio de archivos
 use Illuminate\Support\Facades\App;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -15,6 +17,7 @@ class RequestDose extends Component
     use WithFileUploads;
     protected PacienteService $patientService;
     protected DiagnosticoService $diagnosticoService;
+    protected ArchivoService $archivoService;
 
     public int $patientId;
     public Paciente $patient;
@@ -22,27 +25,43 @@ class RequestDose extends Component
 
     // Otras propiedades públicas
     public $historia_clinica, $diagnostico, $dosis, $frecuencia, $comentarios;
-
-    public function boot(PacienteService $patientService, DiagnosticoService $diagnosticoService): void
+    public $archivosCambioDosis;
+    public function boot(PacienteService $patientService, DiagnosticoService $diagnosticoService, ArchivoService $archivoService): void
     {
         $this->patientService = $patientService;
         $this->diagnosticoService = $diagnosticoService;
+        $this->archivoService = $archivoService;
     }
 
     public function mount(): void
     {
         App::setLocale(session('locale'));
-        // Cargar paciente y asignar valores a las propiedades
-        $this->patient = $this->patientService->findWithTrashed($this->patientId)->load('contrato.diagnostico');
+
+        // Cargar el paciente y el contrato
+        $this->patient = $this->patientService->findWithTrashed($this->patientId)
+            ->load(['contrato.diagnostico', 'contrato.archivos']);
 
         $diagnostico = $this->patient->contrato->diagnostico;
+        $diagnosticoChanged = $this->patient->contrato->ultimoDiagnosticoPendiente();
 
-        $this->historia_clinica = $diagnostico->historia_clinica;
-        $this->diagnostico = $diagnostico->diagnostico;
-        $this->dosis = $diagnostico->dosis;
-        $this->frecuencia = $diagnostico->frecuencia;
-        $this->comentarios = $diagnostico->comentarios;
+        // Filtrar los archivos del tipo 'cambio de dosis'
+        $this->archivosCambioDosis = $this->patient->contrato->archivos
+            ->where('tipo', Archivo::TIPO_CAMBIO_DOSIS);
+
+        // Establecer valores iniciales en los campos
+        $this->historia_clinica = $diagnosticoChanged->historia_clinica ?? $diagnostico->historia_clinica;
+        $this->diagnostico = $diagnosticoChanged->diagnostico ?? $diagnostico->diagnostico;
+        $this->dosis = $diagnosticoChanged->dosis ?? null;
+        $this->frecuencia = $diagnosticoChanged->frecuencia ?? null;
+        $this->comentarios = $diagnosticoChanged->comentarios ?? null;
     }
+
+    // Método para obtener y mostrar un archivo desde S3
+    public function showDocument($fileName)
+    {
+        return $this->archivoService->showDocument($fileName);
+    }
+
 
     public function update()
     {
@@ -133,6 +152,11 @@ class RequestDose extends Component
             'apellido' => $this->patient->surname
         ];
         $this->diagnosticoService->newDiagnostico($data, $this->file);
+
+        // Eliminar los archivos preexistentes de cambio de dosis antes de guardar el nuevo
+        if ($this->archivosCambioDosis->isNotEmpty()) {
+            $this->archivoService->detachedFiles($this->archivosCambioDosis);
+        }
 
         $this->reset(
             'file',

@@ -30,9 +30,10 @@ class Archivo extends Model
     const TIPO_RESPUESTA_INCIDENCIA = 'respuesta de incidencia';
     const TIPO_RECOJO_DISPOSITIVOS = 'documento de recojo de dispositivos';
 
-    public function contrato()
+    public function contratos()
     {
-        return $this->belongsTo(Contrato::class);
+        return $this->belongsToMany(Contrato::class, 'contrato_archivos', 'archivo_id', 'contrato_id')
+            ->withTimestamps();
     }
 
     public function paciente()

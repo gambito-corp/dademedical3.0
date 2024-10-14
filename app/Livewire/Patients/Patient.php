@@ -6,6 +6,7 @@ use App\Services\Paciente\PacienteService;
 use App\Livewire\BaseComponent as Component;
 use Livewire\Attributes\On;
 
+
 class Patient extends Component
 {
     protected PacienteService $patientService;
@@ -90,7 +91,7 @@ class Patient extends Component
             'show' => $this->modalShow = false,
             'delete' => $this->modalDelete = false,
             'changeDose' => $this->modalChangeDoseRequest = false,
-            'aproveDose' => $this->modalChangeDoseApproval = false,
+            'approveDose' => $this->modalChangeDoseApproval = false,
             'changeDirecction' => $this->modalChangeDirecctionRequest = false,
             'aproveDirecction' => $this->modalChangeDirecctionApproval = false,
             'incidence' => $this->modalIncidence = false,

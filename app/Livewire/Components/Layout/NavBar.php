@@ -41,7 +41,25 @@ class NavBar extends Component
                 'route' => 'patients.index',
                 'active' => request()->routeIs('patients.*'),
                 'roles' => ['*'] // Todos los roles pueden ver esto
-            ]
+            ],
+            [
+                'name' => __('dashboard.Incidences'),
+                'route' => 'incidences.index',
+                'active' => request()->routeIs('incidences.*'),
+                'roles' => ['*'] // Todos los roles pueden ver esto
+            ],
+            [
+                'name' => __('dashboard.Inventory'),
+                'route' => 'inventory.index',
+                'active' => request()->routeIs('inventory.*'),
+                'roles' => ['*'] // Todos los roles pueden ver esto
+            ],
+            [
+                'name' => __('dashboard.Contracts'),
+                'route' => 'contracts.index',
+                'active' => request()->routeIs('contracts.*'),
+                'roles' => ['*']
+            ],
         ];
 
         // Filtrar los enlaces según los roles del usuario

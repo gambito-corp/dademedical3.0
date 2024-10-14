@@ -11,6 +11,7 @@ use App\Services\Direccion\DireccionService;
 use App\Services\Logs\LogService;
 use App\Services\Telefono\TelefonoService;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class PacienteService
@@ -52,6 +53,8 @@ class PacienteService
                     END) LIKE ?", ["%{$search}%"]);
             });
         }
+        // Agregar las relaciones necesarias usando with()
+        $query->with(['contrato.diagnosticosPendientes']);
 
         return $query->paginate($paginate);
     }
@@ -81,6 +84,7 @@ class PacienteService
 
     public function create(array $data): Paciente|Collection|null
     {
+        DB::beginTransaction();
         $paciente = $this->save($data);
         $data['paciente_id'] = $paciente->id;
         $contrato = $this->redirigirServiceContrato($data);
@@ -89,6 +93,7 @@ class PacienteService
         $this->redirigirServiceTelefonos($data);
         $this->redirigirServiceDiagnostico($data);
         $this->redirigirServiceArchivos($data);
+        DB::commit();
         return $this->pacienteRepository->find($data['paciente_id']);
     }
     public function edit(array $data)
@@ -132,7 +137,7 @@ class PacienteService
             'diagnostico' => Str::title($data['diagnostico']),
             'dosis' => $data['dosis'],
             'frecuencia' => $data['horas_oxigeno'],
-            'active' => 'yes',
+            'active' => true,
         ];
 
         $this->diagnosticoService->save(diagnostico: $infoDiagnostico);

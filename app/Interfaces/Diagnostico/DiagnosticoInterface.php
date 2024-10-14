@@ -9,4 +9,6 @@ interface DiagnosticoInterface
     public function save($data);
     public function update($data, $id);
     public function delete($id);
+
+    public function deletePending(mixed $contrato_id);
 }

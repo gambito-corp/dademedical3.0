@@ -15,11 +15,22 @@ class ContratoRepository implements ContratoInterface
     {
     }
 
+    public function query(string $orderColumn, string $orderDirection)
+    {
+        $query = $this->contrato->newQuery();
+        return $query->orderBy($orderColumn, $orderDirection);
+    }
+
+
+
+
     public function getContrato()
     {}
 
     public function getContratoById($id)
-    {}
+    {
+        return $this->contrato->query()->find($id);
+    }
 
     public function save($data)
     {
@@ -33,7 +44,10 @@ class ContratoRepository implements ContratoInterface
 
         $contratoFechas->contrato_id = $contrato->id;
         $contratoFechas->fecha_solicitud = now();
+        $contratoFechas->save();
 
         return $contrato->load('contratoUsuario', 'contratoFechas');
     }
+
+
 }

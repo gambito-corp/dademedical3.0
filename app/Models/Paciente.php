@@ -36,6 +36,9 @@ class Paciente extends Model
         'origen',
         'active',
     ];
+    protected $appends = [
+        'diagnosticoPendiente', 'idDiagnosticoPendiente'
+    ];
 
     //accesor
     public function getFullNameAttribute()
@@ -47,7 +50,46 @@ class Paciente extends Model
         return $this->origen == 1 ? 'Consulta externa' : 'UDO';
     }
 
+    // Accessor para diagnosticoPendiente
+    public function getDiagnosticoPendienteAttribute()
+    {
+        $contrato = $this->contrato;
+
+        if ($contrato) {
+            // Verificamos si existen diagnósticos pendientes en el contrato
+            return $contrato->diagnosticosPendientes()->exists();
+        }
+
+        return false;
+    }
+
+    // Accessor para idDiagnosticoPendiente
+    public function getIdDiagnosticoPendienteAttribute()
+    {
+        // Solo si existe un diagnóstico pendiente
+        if ($this->diagnosticoPendiente) {
+            $contrato = $this->contrato;
+
+            if ($contrato) {
+                $diagnosticoPendiente = $contrato->diagnosticosPendientes()->first();
+
+                if ($diagnosticoPendiente) {
+                    return $diagnosticoPendiente->id;
+                }
+            }
+        }
+
+        return null;
+    }
+
     //Relaciones
+
+    // Relación para obtener todos los archivos de un paciente a través de los contratos
+    public function archivos()
+    {
+        return $this->hasManyThrough(Archivo::class, Contrato::class, 'paciente_id', 'contrato_id', 'id', 'id');
+    }
+
     public function user(){
         return $this->belongsTo(User::class);
     }
