@@ -5,12 +5,21 @@ namespace App\Livewire\Contracts\Forms;
 use App\Models\Carrito;
 use App\Models\Concentrador as Maquina;
 use App\Models\Contrato;
+use App\Models\ContratoUsuario;
 use App\Models\Producto;
 use App\Models\ContratoProducto;
 use App\Models\Regulador;
 use App\Models\Tanque;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Livewire\Component;
 use Illuminate\Support\Facades\Log;
+
+use App\Exports\FichaInstalacionExport;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Storage;
+
+
 
 class OsSolicitado extends Component
 {
@@ -75,6 +84,7 @@ class OsSolicitado extends Component
     {
         $this->maquina = Producto::query()
             ->where('id', $codigo)
+            ->with('productable')
             ->first();
         $this->maquinaCodigo = $this->maquina->codigo;
         $this->maquinas = [];
@@ -84,7 +94,7 @@ class OsSolicitado extends Component
     {
         $this->tanques =  Producto::query()
             ->where('productable_type', Tanque::class)
-            ->where('codigo', 'like', '%' . $this->maquinaCodigo . '%')
+            ->where('codigo', 'like', '%' . $this->tanqueCodigo . '%')
             ->where('activo', '1')
             ->take(10)
             ->get()
@@ -94,6 +104,7 @@ class OsSolicitado extends Component
     {
         $this->tanque = Producto::query()
             ->where('id', $codigo)
+            ->with('productable')
             ->first();
         $this->tanqueCodigo = $this->tanque->codigo;
         $this->tanques = [];
@@ -102,7 +113,7 @@ class OsSolicitado extends Component
     {
         $this->reguladores = Producto::query()
             ->where('productable_type', Regulador::class)
-            ->where('codigo', 'like', '%' . $this->maquinaCodigo . '%')
+            ->where('codigo', 'like', '%' . $this->reguladorCodigo . '%')
             ->where('activo', '1')
             ->take(10)
             ->get()
@@ -112,6 +123,7 @@ class OsSolicitado extends Component
     {
         $this->regulador = Producto::query()
             ->where('id', $codigo)
+            ->with('productable')
             ->first();
         $this->reguladorCodigo = $this->regulador->codigo;
         $this->reguladores = [];
@@ -120,7 +132,7 @@ class OsSolicitado extends Component
     {
         $this->carritos = Producto::query()
             ->where('productable_type', Carrito::class)
-            ->where('codigo', 'like', '%' . $this->maquinaCodigo . '%')
+            ->where('codigo', 'like', '%' . $this->carritoCodigo . '%')
             ->where('activo', '1')
             ->take(10)
             ->get()
@@ -130,6 +142,7 @@ class OsSolicitado extends Component
     {
         $this->carrito = Producto::query()
             ->where('id', $codigo)
+            ->with('productable')
             ->first();
         $this->carritoCodigo = $this->carrito->codigo;
         $this->carritos = [];
@@ -147,74 +160,118 @@ class OsSolicitado extends Component
     // Acción al hacer clic en "Descargar Ficha de Instalación"
     public function downloadInstallationSheet()
     {
-        // Lógica para generar y descargar la ficha de instalación
-        // ...
+        // Preparar los datos del contrato y los productos
+        $productos = [
+            'maquina' => $this->maquina,
+            'tanque' => $this->tanque,
+            'regulador' => $this->regulador,
+            'carrito' => $this->carrito,
+        ];
 
-        // Después de descargar, mostrar el botón de "Aprobar OS"
-        $this->showApproveButton = true;
-        $this->showDownloadButton = false;
+        // Crear una instancia del exportador
+        $export = new FichaInstalacionExport($this->contract, $productos);
+
+        $patientName = Str::slug($this->contract?->paciente?->full_name, '_');
+
+        // Definir el nombre del archivo de salida
+        $outputFilename = 'Ficha_Instalacion_'.$patientName.'.xlsx';
+
+        // Guardar el archivo Excel
+        $export->saveSpreadsheet($outputFilename);
+
+        // Definir la ruta completa del archivo para descargar
+        $outputPath = storage_path('app/templates/output/' . $outputFilename);
+
+        // Retornar la descarga al usuario
+        if (file_exists($outputPath)) {
+            $this->showDownloadButton = false;
+            $this->showApproveButton = true;
+            return response()->download($outputPath)->deleteFileAfterSend(true);
+        } else {
+            abort(404, 'El archivo no se pudo generar');
+        }
     }
 
     // Acción al hacer clic en "Aprobar OS"
     public function approveOS()
     {
 //        // Validar que los campos requeridos estén llenos
-//        $this->validate([
-//            'maquina' => 'required',
-//            'tanque' => 'required',
-//            'regulador' => 'required',
-//            'carrito' => 'required',
-//        ]);
-//
-//        // Actualizar el estado del contrato
-//        $this->contract->estado_orden = 'aprove';
-//        $this->contract->save();
-//
-//        // Asociar los productos al contrato
-//        $this->asignarProductoAlContrato($this->maquina);
-//        $this->asignarProductoAlContrato($this->tanque);
-//        $this->asignarProductoAlContrato($this->regulador);
-//        $this->asignarProductoAlContrato($this->carrito);
-//
-//        // Actualizar fecha de aprobación
-//        $anotarFecha = $this->contract->contratoFechas()->first();
-//        if ($anotarFecha) {
-//            $anotarFecha->fecha_aprobacion = now();
-//            $anotarFecha->save();
-//        }
-//
-//        session()->flash('status', 'La Orden de Servicio ha sido aprobada.');
+        $this->validate([
+            'maquina' => 'required',
+            'tanque' => 'nullable',
+            'regulador' => 'nullable',
+            'carrito' => 'nullable',
+        ]);
+        try {
+            DB::beginTransaction();//        // Actualizar el estado del contrato
+            $this->contract->estado_orden = 1;
+            $this->contract->save();
+            // Asociar los productos al contrato
+            if($this->maquina) $this->asignarProductoAlContrato($this->maquina->id);
+
+            if($this->tanque) $this->asignarProductoAlContrato($this->tanque->id);
+
+            if($this->regulador) $this->asignarProductoAlContrato($this->regulador->id);
+
+            if($this->carrito) $this->asignarProductoAlContrato($this->carrito->id);
+
+            // Actualizar fecha de aprobación
+            $anotarFecha = $this->contract->contratoFechas()->first();
+            if ($anotarFecha) {
+                $anotarFecha->fecha_aprobacion = now();
+                $anotarFecha->save();
+            }
+            //Actualiza Id De Usuario Aprobador
+            $this->contract->contratoUsuario->aprobador_id = auth()->user()->id;
+            $this->contract->contratoUsuario->save();
+            DB::commit();
+            $this->dispatch('orden-actualizada', ['contractId' => $this->contract->id]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+        }
+        session()->flash('status', 'La Orden de Servicio ha sido aprobada.');
     }
 
     // Acción al hacer clic en "Rechazar OS"
     public function rejectOS()
     {
-//        // Actualizar el estado del contrato
-//        $this->contract->estado_orden = 'reject';
-//        $this->contract->save();
-//
-//        // Actualizar fecha de rechazo
-//        $anotarFecha = $this->contract->contratoFechas()->first();
-//        if ($anotarFecha) {
-//            $anotarFecha->fecha_rechazo = now();
-//            $anotarFecha->save();
-//        }
-//
-//        session()->flash('status', 'La Orden de Servicio ha sido rechazada.');
+        try{
+            DB::beginTransaction();
+            // Actualizar el estado del contrato
+            $this->contract->estado_orden = 2;
+            $this->contract->save();
+            // Actualizar fecha de rechazo
+            $this->contract->contratoFechas->fecha_rechazo = now();
+            $this->contract->contratoFechas->save();
+
+            //borrar registro de usuario aprobador
+            $registroUsuarioAprobador = ContratoUsuario::query()
+                ->where('contrato_id', $this->contract->id)
+                ->get()
+                ->last();
+            $registroUsuarioAprobador->delete();
+            DB::commit();
+            $this->dispatch('orden-actualizada', ['contractId' => $this->contract->id]);
+        }catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+        }
+        session()->flash('status', 'La Orden de Servicio ha sido rechazada.');
     }
 
     private function asignarProductoAlContrato(int $productoId)
     {
-//        $producto = Producto::find($productoId);
-//        if ($producto) {
-//            $producto->contrato_id = $this->contract->id;
-//            $producto->save();
-//
-//            $vinculacionPivote = new ContratoProducto();
-//            $vinculacionPivote->contrato_id = $this->contract->id;
-//            $vinculacionPivote->producto_id = $productoId;
-//            $vinculacionPivote->save();
-//        }
+        $producto = Producto::query()->find($productoId);
+        if ($producto) {
+            $producto->contrato_id = $this->contract->id;
+            $producto->save();
+
+            $vinculacionPivote = new ContratoProducto();
+            $vinculacionPivote->contrato_id = $this->contract->id;
+            $vinculacionPivote->producto_id = $productoId;
+            $vinculacionPivote->save();
+        }
     }
 
     public function render()

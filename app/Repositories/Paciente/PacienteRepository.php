@@ -119,7 +119,6 @@ class PacienteRepository implements PacienteInterface
             $this->logService->create('La respuesta de Reniec no contiene los campos esperados. Verifique el token de Reniec y avise al administrador del sistema.', 'error');
             throw new \Exception("La respuesta de Reniec no contiene los campos esperados. Verifique el token de Reniec y avise al administrador del sistema.");
         }
-
         return $response;
     }
 

@@ -23,7 +23,7 @@ class ContratoFechas extends Model
         'fecha_finalizado',
     ];
 
-    protected $cast = [
+    protected $casts = [
         'fecha_solicitud' => 'datetime',
         'fecha_aprobacion' => 'datetime',
         'fecha_rechazo' => 'datetime',

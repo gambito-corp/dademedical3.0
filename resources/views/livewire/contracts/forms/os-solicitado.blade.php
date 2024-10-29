@@ -169,19 +169,19 @@
         <!-- Botones -->
         <div class="mt-6 flex space-x-4">
             @if(!$showDownloadButton && !$showApproveButton)
-                <button {{-- wire:click="rejectOS"--}} class="bg-red-500 text-white px-4 py-2 rounded">
+                <button  wire:click="rejectOS" class="bg-red-500 text-white px-4 py-2 rounded">
                     Rechazar OS
                 </button>
             @endif
 
             @if($showDownloadButton)
-                <button {{--wire:click="downloadInstallationSheet"--}} class="bg-blue-500 text-white px-4 py-2 rounded">
+                <button wire:click="downloadInstallationSheet" class="bg-blue-500 text-white px-4 py-2 rounded">
                     Descargar Ficha de Instalación
                 </button>
             @endif
 
             @if($showApproveButton)
-                <button {{--wire:click="approveOS"--}} class="bg-green-500 text-white px-4 py-2 rounded">
+                <button wire:click="approveOS" class="bg-green-500 text-white px-4 py-2 rounded">
                     Aprobar OS
                 </button>
             @endif

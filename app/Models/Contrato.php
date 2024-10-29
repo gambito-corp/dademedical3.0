@@ -66,6 +66,19 @@ class Contrato extends Model
         return $this->diagnosticosAprobados()->latest('id')->first();
     }
 
+    public function direcciones()
+    {
+        return $this->hasMany(Direccion::class);
+    }
+
+    public function direccionAprobadas()
+    {
+        return $this->direcciones()->where('active', 1);
+    }
+    public function ultimaDireccionAprobada()
+    {
+        return $this->direccionAprobadas()->latest('id')->first();
+    }
 
     public function direccion()
     {
@@ -86,7 +99,15 @@ class Contrato extends Model
     }
 
     // Relación con la tabla contrato_productos
-    public function productos(): HasMany
+    public function productos()
+    {
+        return $this->hasMany(ContratoProducto::class);
+    }
+    public function fecha()
+    {
+        return $this->hasOne(ContratoFechas::class);
+    }
+    public function contratoProductos()
     {
         return $this->hasMany(ContratoProducto::class);
     }

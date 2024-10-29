@@ -91,6 +91,9 @@ class ArchivoService
             'croquis' => Archivo::TIPO_CROQUIS_DIRECCION,
             'otros' => Archivo::TIPO_OTROS,
             'documento_de_cambio_de_dosis' => Archivo::TIPO_CAMBIO_DOSIS,
+            'ficha_instalacion' => Archivo::TIPO_ENTREGA_DISPOSITIVOS,
+            'guia_remision' => Archivo::TIPO_GUIA_REMISION,
+            'ficha_recogida' => Archivo::TIPO_RECOJO_DISPOSITIVOS,
             default => 'desconocido',
         };
     }
@@ -122,7 +125,6 @@ class ArchivoService
     public function obtenerUrlImagen($fileName)
     {
         $disk = Storage::disk('s3');
-        dd($disk, $filename);
         $ruta = 'Documentos/Archivos/' . $fileName;
 
         if ($disk->exists($ruta)) {

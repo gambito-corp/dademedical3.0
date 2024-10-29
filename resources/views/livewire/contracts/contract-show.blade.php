@@ -3,13 +3,10 @@
     <!-- Zona de Información -->
     <div class="bg-white shadow-md rounded p-4 mb-6">
         <h2 class="text-lg font-bold">Información del Contrato</h2>
-        La Orden de Servicio Fue Ingresada el Dia (Dia / mes / Año)
-        y su última actualización fue el (Dia / mes / Año) al Estado (Estado de la Orden)
-        el usuario que realizó la última actualización fue (Nombre del Usuario) [si había una Impersonación marcar un Asterisco...]
-
+        La Orden de Servicio Fue Ingresada el {{$contract->contratoFechas?->fecha_solicitud?->format('d/m/Y') ?? 'N/A'}},
+        y su última actualización fue el {{$contract->contratoFechas?->updated_at?->format('d/m/Y')}} al Estado de {{ \App\Models\Contrato::ESTADO_ORDEN[$contract->estado_orden] ?? $contract->estado_orden }}.
         Estado actual de La Orden: {{ \App\Models\Contrato::ESTADO_ORDEN[$contract->estado_orden] ?? $contract->estado_orden }}
     </div>
-
     <!-- Zona de Detalle -->
     <div class="bg-white shadow-md rounded p-4 mb-6">
         <h2 class="text-lg font-bold mb-4">Detalles del Contrato</h2>
@@ -19,6 +16,7 @@
             <div>
                 <h3 class="text-lg font-bold mb-2">Listado de Equipos asignados Actualmente</h3>
                 <ul>
+                    @dump($contract->equipos)
                     <li>Equipo 1</li>
                     <li>Equipo 2</li>
                     <li>Equipo 3</li>
@@ -103,15 +101,31 @@
                 </ul>
             </div>
         </div>
-        @if($contract->estado_orden == 0)
-            <!-- Incluir el componente Livewire OsSolicitado -->
-            <livewire:contracts.forms.os-solicitado :contract="$contract" />
-        @elseif($contract->estado_orden == 1)
-            <!-- Puedes incluir otro formulario o componente para estado_orden == 1 -->
-            <p>Otro formulario para estado_orden == 1</p>
-        @else
-            <p>No hay formularios disponibles para este estado.</p>
-        @endif
+        @switch($contract->estado_orden)
+            @case(0)
+                <livewire:contracts.forms.os-solicitado :contract="$contract" />
+                @break
+            @case(1)
+                <livewire:contracts.forms.os-aprobado :contract="$contract" />
+                @break
+            @case(2)
+                <p>La Orden de Servicio Fue Rechazada</p>
+                @break
+            @case(3)
+                <p>La Orden de Servicio ha sido Anulada.</p>
+                @break
+            @case(4)
+                <livewire:contracts.forms.os-entregado :contract="$contract" />
+                @break
+            @case(5)
+                <livewire:contracts.forms.os-recogido :contract="$contract" />
+                @break
+            @case(6)
+                <p>La Orden de Servicio ha sido Finalizada.</p>
+                @break
+            @default
+                <p>No hay formularios disponibles para este estado.</p>
+        @endswitch
     </div>
 
     <!-- Modal para mostrar el documento -->

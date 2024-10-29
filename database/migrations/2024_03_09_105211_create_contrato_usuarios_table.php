@@ -21,6 +21,7 @@ class CreateContratoUsuariosTable extends Migration
             $table->foreignId('bajador_id')->nullable()->constrained('users'); // refiere al id de la tabla 'users' y puede ser NULL
             $table->foreignId('finalizador_id')->nullable()->constrained('users'); // refiere al id de la tabla 'users' y puede ser NULL
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

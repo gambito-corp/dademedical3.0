@@ -230,6 +230,7 @@ class CreatePatient extends Component
 
     public function save()
     {
+        //TODO: Agregar Load al Momento de Guardado...
         $this->validateCurrentStep();
 
         // Sanitize and format 'dosis' and 'horas_oxigeno'

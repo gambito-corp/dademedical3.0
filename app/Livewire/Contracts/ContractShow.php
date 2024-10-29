@@ -5,7 +5,9 @@ namespace App\Livewire\Contracts;
 use App\Models\Contrato;
 use App\Services\Archivo\ArchivoService;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
+use Livewire\Attributes\On;
 
 class ContractShow extends Component
 {
@@ -15,6 +17,11 @@ class ContractShow extends Component
     public bool $showDocument = false;
     public string $document = '';
     public string $urlImagen = '';
+    #[On('orden-actualizada')]
+    public function OrdenActualizada($contractId)
+    {
+        $this->contract = Contrato::query()->find($contractId['contractId']);
+    }
 
     public function boot(ArchivoService $archivoService)
     {
@@ -64,7 +71,7 @@ class ContractShow extends Component
 
     private function obtenerUrlImagen(string $rutaArchivo): ?string
     {
-        $disk = \Storage::disk('s3');
+        $disk = Storage::disk('s3');
         $ruta = 'Documentos/Archivos/' . $rutaArchivo;
 
         if ($disk->exists($ruta)) {
