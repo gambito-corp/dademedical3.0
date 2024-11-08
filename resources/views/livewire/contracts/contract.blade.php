@@ -40,7 +40,7 @@
                                     name="inputSelect"
                                     id="inputSelect"
                                     type="text"
-                                    placeholder="{{ __('Pagination') }}"
+                                    placeholder=""
                                     wire:model="paginate"
                                     wire:click.self="showPagination">
                                 @if($showDropdown)
