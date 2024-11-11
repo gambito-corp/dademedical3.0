@@ -50,8 +50,17 @@ class PacienteService
                         WHEN origen = 1 THEN 'Consulta Externa'
                         WHEN origen = 2 THEN 'UDO'
                         ELSE ''
-                    END) LIKE ?", ["%{$search}%"]);
+                    END) LIKE ?", ["%{$search}%"])
+                ->orWhereHas('contrato', function ($q) use ($search) {
+                    $q->whereHas('contratoFechas', function ($q) use ($search) {
+                        $q->where('fecha_solicitud', 'like', "%{$search}%")
+                           /* ->orWhere('fecha_entrega', 'like', "%{$search}%")
+                            ->orWhere('fecha_finalizado', 'like', "%{$search}%")*/;
+                    });
+                });
             });
+            // agregarn filtro por Fechas de Ingreso y entrega / egreso
+//            dd($query->get());
         }
         // Agregar las relaciones necesarias usando with()
         $query->with(['contrato.diagnosticosPendientes']);

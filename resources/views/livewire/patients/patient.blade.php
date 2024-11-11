@@ -33,7 +33,7 @@
                                     name="inputSelect"
                                     id="inputSelect"
                                     type="text"
-{{--                                    placeholder="{{ }}"--}}
+                                    placeholder="{{''}}"
                                     wire:model="paginate"
                                     wire:click.self="showPagination">
                                 @if($showDropdown)
@@ -83,9 +83,24 @@
                                     <th wire:click="sortBy('hospital_nombre')" class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider cursor-pointer">
                                         {{ __('paciente.Site') }} @if($orderColumn == 'hospital_nombre') <i class="fas fa-sort-{{$orderDirection == 'asc' ? 'up' : 'down'}}"></i> @endif
                                     </th>
+                                    <th  wire:click="sortBy('fecha_solicitud')" class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider cursor-pointer">
+                                        {{  __('paciente.Fecha de ingreso')}} @if($orderColumn == 'fecha_ingreso') <i class="fas fa-sort-{{$orderDirection == 'asc' ? 'up' : 'down'}}"></i> @endif
+                                    </th>
+{{--                                    @if($currentFilter == 'active')--}}
+{{--                                        <th  wire:click="sortBy('fecha_entrega')" class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider cursor-pointer">--}}
+{{--                                            {{  __('paciente.Fecha de entrega')}} @if($orderColumn == 'fecha_ingreso') <i class="fas fa-sort-{{$orderDirection == 'asc' ? 'up' : 'down'}}"></i> @endif--}}
+{{--                                        </th>--}}
+{{--                                    @else--}}
+{{--                                        <th  wire:click="sortBy('fecha_finalizado')" class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider cursor-pointer">--}}
+{{--                                            {{  __('paciente.Fecha de finalizado')}} @if($orderColumn == 'fecha_ingreso') <i class="fas fa-sort-{{$orderDirection == 'asc' ? 'up' : 'down'}}"></i> @endif--}}
+{{--                                        </th>--}}
+{{--                                    @endif--}}
+
+
                                     <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                                         {{ __('paciente.Actions') }}
                                     </th>
+
                                 </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
@@ -145,6 +160,37 @@
                                                 </div>
                                             </div>
                                         </td>
+                                        <td class="px-6 py-4 whitespace-no-wrap">
+                                            <div class="flex items-center">
+                                                <div>
+                                                    <div class="text-sm leading-5 text-gray-900">
+                                                        {{ $item->contrato?->contratoFechas?->fecha_solicitud ?? 'N/A' }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+{{--                                        @if($currentFilter == 'active')--}}
+{{--                                            <td class="px-6 py-4 whitespace-no-wrap">--}}
+{{--                                                <div class="flex items-center">--}}
+{{--                                                    <div>--}}
+{{--                                                        <div class="text-sm leading-5 text-gray-900">--}}
+{{--                                                            {{ $item->contrato?->contratoFechas?->fecha_entrega ?? 'N/A' }}--}}
+{{--                                                        </div>--}}
+{{--                                                    </div>--}}
+{{--                                                </div>--}}
+{{--                                            </td>--}}
+{{--                                        @else--}}
+{{--                                            <td class="px-6 py-4 whitespace-no-wrap">--}}
+{{--                                                <div class="flex items-center">--}}
+{{--                                                    <div>--}}
+{{--                                                        <div class="text-sm leading-5 text-gray-900">--}}
+{{--                                                            {{ $item->contrato?->contratoFechas?->fecha_finalizado ?? 'N/A' }}--}}
+{{--                                                        </div>--}}
+{{--                                                    </div>--}}
+{{--                                                </div>--}}
+{{--                                            </td>--}}
+{{--                                        @endif--}}
+
                                         <td class="px-6 py-4 whitespace-no-wrap">
                                             <div class="flex items-center">
                                                 <div class="text-sm leading-5 text-gray-900">

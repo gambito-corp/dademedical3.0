@@ -15,16 +15,21 @@ class PacienteRepository implements PacienteInterface
     {
         $query = $this->pacientes->newQuery();
 
-        if ($orderColumn === 'hospital_nombre') {
+        if ($orderColumn === 'hospital_nombre' || $orderColumn === 'fecha_solicitud') {
             $query->leftJoin('users as u', 'u.id', '=', 'pacientes.user_id')
                 ->leftJoin('hospitals as h', 'h.id', '=', 'u.hospital_id')
-                ->orderBy('h.nombre', $orderDirection)
-                ->select('pacientes.*');
-        } else {
+                ->leftJoin('contratos as c', function ($join) {
+                    $join->on('c.paciente_id', '=', 'pacientes.id')
+                        ->whereRaw('c.id = (SELECT MAX(id) FROM contratos WHERE paciente_id = pacientes.id)');
+                })
+                ->leftJoin('contrato_fechas as cf', 'cf.contrato_id', '=', 'c.id') // Usa 'contrato_id' en lugar de 'id_contrato'
+                ->select('pacientes.*', 'h.nombre as hospital_nombre', 'cf.fecha_solicitud', 'cf.fecha_entrega', 'cf.fecha_finalizado')
+                ->orderBy($orderColumn === 'hospital_nombre' ? 'h.nombre' : 'cf.fecha_solicitud', $orderDirection);
+        }else {
             $query->orderBy($orderColumn, $orderDirection);
         }
 
-
+        $query = $query->with('contrato.contratoFechas');
 
         return $query;
     }

@@ -47,8 +47,9 @@ class PacienteSeeder extends Seeder
 
             for ($j = 0; $j <= 1; $j++) {
                 $contrato = Contrato::factory()->create(['paciente_id' => $paciente->id]);
-
+dump('inicio de la prueba va '. $i + 1 .' de X contratos entro al Diagnostico');
                 Diagnostico::factory()->create(['contrato_id' => $contrato->id]);
+                dump('fin de la prueba');
                 ContratoFechas::factory()->create();
                 ContratoUsuario::factory()->create();
                 Direccion::factory()->create();

@@ -17,9 +17,7 @@ class Contrato extends Model
         3 => 'OS Anulado',
         4 => 'OS Entregado',
         5 => 'OS Recojo',
-        6 => 'OS Finalizado',
-        'aprove' => 'OS Aprobado',
-        'reject' => 'OS Rechazado',
+        6 => 'OS Finalizado'
     ];
 
     protected $fillable = [
