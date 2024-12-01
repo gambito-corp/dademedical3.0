@@ -7,8 +7,27 @@
                 <x-input-field name="paciente.hospital" :label="__('paciente.Hospital')" type="select" :options="$hospitals" />
                 <x-input-field name="paciente.documento_tipo" :label="__('paciente.Document Type')" type="select" :options="['DNI' => 'DNI', 'Pasaporte']" />
                 <x-input-field name="paciente.numero_documento" :label="__('paciente.Document Number')" type="text" />
-                <x-input-field name="paciente.nombres" :label="__('paciente.First Name')" type="text" />
-                <x-input-field name="paciente.apellidos" :label="__('paciente.Last Name')" type="text" />
+
+                <label for="paciente.nombres" class="block text-sm font-medium text-gray-700">nombres</label>
+                <input
+                    type="text"
+                    name="paciente.nombres"
+                    id="paciente.nombres"
+                    wire:model.live.lazy="paciente.nombres"
+                    value="{{$paciente['nombres']}}"
+                    class="mt-1 block w-full border-gray-300
+                   focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                >
+                <label for="paciente.apellidos" class="block text-sm font-medium text-gray-700">apellidos</label>
+                <input
+                    type="text"
+                    name="paciente.apellidos"
+                    id="paciente.apellidos"
+                    wire:model="paciente.apellidos"
+                    value="{{$paciente['apellidos']}}"
+                    class="mt-1 block w-full border-gray-300
+                   focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+                >
             </div>
         @endif
 
@@ -69,7 +88,11 @@
             @if($currentStep < $totalSteps)
                 <button type="button" wire:click="nextStep" class="bg-blue-500 text-white px-4 py-2 rounded">{{ __('paciente.Next') }}</button>
             @else
-                <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">{{ __('paciente.Save') }}</button>
+                <button wire:loading.remove type="submit" class="bg-green-500 text-white px-4 py-2 rounded">{{ __('paciente.Save') }}</button>
+
+                <div wire:loading>
+                    Creating Patient...
+                </div>
             @endif
         </div>
     </form>

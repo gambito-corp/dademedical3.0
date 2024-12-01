@@ -1,33 +1,27 @@
 <div>
     <form wire:submit.prevent="approve">
         <div class="mb-4">
-            <h2 class="font-semibold text-xl">{{ __('Aprobación de Cambio de Dosis') }}</h2>
+            <h2 class="font-semibold text-xl">{{ __('Aprobación de Cambio de Direccion') }}</h2>
         </div>
 
         <div class="mb-4">
             <label class="block text-sm font-medium text-gray-700">{{ __('El Paciente') }}</label>
-            <p>{{ $patient->name }} {{ $patient->surname }}</p>
+            <p>{{ $paciente->name }} {{ $paciente->surname }}</p>
         </div>
 
         <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700">{{ __('Dosis Actual') }}</label>
-            <p>{{ $diagnostico->dosis }}</p>
+            <label class="block text-sm font-medium text-gray-700">{{ __('Dirección Actual') }}</label>
+            <p>{{ "$direccion->calle, $direccion->distrito" . ($direccion->referencia ? ", $direccion->referencia" : '') }}</p>
+            <p>{{"Responsable: $direccion->responsable"}}</p>
         </div>
 
-        <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700">{{ __('Nueva Dosis Solicitada') }}</label>
-            <p>{{ $doseChangeRequest->dosis }}</p>
-        </div>
 
         <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700">{{ __('Frecuencia Actual') }}</label>
-            <p>{{ $diagnostico->frecuencia }}</p>
+            <label class="block text-sm font-medium text-gray-700">{{ __('Nueva Dirección') }}</label>
+            <p>{{ "$cambioDireccion->calle, $cambioDireccion->distrito" . ($cambioDireccion->referencia ? ", $cambioDireccion->referencia" : '') }}</p>
+            <p>{{"Responsable: $cambioDireccion->responsable"}}</p>
         </div>
 
-        <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700">{{ __('Nueva Frecuencia Solicitada') }}</label>
-            <p>{{ $doseChangeRequest->frecuencia }}</p>
-        </div>
 
         <div class="mb-4">
             <label class="block text-sm font-medium text-gray-700">{{ __('Documento de Cambio de Dosis') }}</label>
@@ -40,10 +34,6 @@
         </div>
 
 
-        <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700">{{ __('Comentarios') }}</label>
-            <p>{{ $doseChangeRequest->comentarios }}</p>
-        </div>
 
         <div class="mb-4">
             <label for="approvalStatus" class="block text-sm font-medium text-gray-700">{{ __('Estado de Aprobación') }}</label>

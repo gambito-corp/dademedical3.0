@@ -31,4 +31,12 @@ class DireccionRepository implements DireccionInterface
 
     public function delete($id)
     {}
+
+    public function deletePending(mixed $contrato_id)
+    {
+        $direccionPendiente = $this->direccion->where('contrato_id', $contrato_id)->where('active', 0)->get();
+        foreach ($direccionPendiente as $direccion) {
+            $direccion->forceDelete();
+        }
+    }
 }

@@ -4,6 +4,7 @@ namespace App\Services\Archivo;
 
 use App\Interfaces\Archivo\ArchivoInterface;
 use App\Models\Archivo;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -26,6 +27,7 @@ class ArchivoService
                 if ($file instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile) {
                     $tipo = $this->getFileType($key);
                     $directory = $this->generateDirectoryStructure($name, $surname, $patientId, $contractId, $tipo);
+
                     $extension = $file->getClientOriginalExtension();
                     $fileName = $this->generateFileName($tipo, $directory, $extension);
                     $path = $file->storeAs($directory, $fileName, 'archivos');
@@ -51,8 +53,6 @@ class ArchivoService
                     Storage::disk('archivos')->delete($filePath);
                 }
             }
-
-            // Relanzar la excepción
             throw new \Exception("Error al guardar archivos o en la base de datos: " . $e->getMessage(), 0, $e);
         }
     }
@@ -94,6 +94,7 @@ class ArchivoService
             'ficha_instalacion' => Archivo::TIPO_ENTREGA_DISPOSITIVOS,
             'guia_remision' => Archivo::TIPO_GUIA_REMISION,
             'ficha_recogida' => Archivo::TIPO_RECOJO_DISPOSITIVOS,
+            'documento_de_cambio_de_direccion' => Archivo::TIPO_CAMBIO_DIRECCION,
             default => 'desconocido',
         };
     }
@@ -104,14 +105,42 @@ class ArchivoService
         return Storage::disk('archivos')->temporaryUrl($fileName, now()->addMinutes(60));
     }
 
-    public function detachedFiles($archivosCambioDosis)
+    public function getFile($ruta)
+    {
+        if (Auth::user()){
+            $file = Storage::disk('archivos')->get($ruta);
+            $code = 200;
+        }else{
+            $file = Storage::disk('s3')->get('avatar/ejemplo.jpg');
+            $code = 401;
+        }
+        return ['file' => $file, 'status' => $code];
+    }
+
+//    public function getDownload($id, $file){
+//        $data = DocumentosVehiculo::with('Empresa', 'Lote', 'Producto')->where('id', $id)->first();
+//        $ruta = 'documentos/vehiculos/'.
+//            Str::slug($data->Empresa->nombre, "-").
+//            '/'.
+//            Str::slug($data->Lote->nombre, "-").
+//            '/' .
+//            Str::slug($data->Producto->nombre, "-").
+//            '/';
+//        $header = [
+//            'Content-Disposition: attachment',
+//            'Cache-Control: no-cache',
+//            'Content-Type: application/pdf',
+//        ];
+//
+//        return Storage::disk('s3')->download($ruta.$file, $file, $header);
+//    }
+
+    public function detachedFiles($archivoCambioDireccion)
     {
         try {
             DB::beginTransaction();
-            foreach ($archivosCambioDosis as $archivo) {
-                if (Storage::disk('archivos')->exists($archivo->ruta)) {
-                    Storage::disk('archivos')->delete($archivo->ruta);
-                }
+            foreach ($archivoCambioDireccion as $archivo) {
+                $this->deleteDocument($archivo->id);
                 $this->archivoRepository->detachedFile($archivo->contratos());
                 $this->archivoRepository->deleteArchivoById($archivo->id);
             }
@@ -135,6 +164,17 @@ class ArchivoService
             // Manejar el caso en que el archivo no exista
             Log::error("El archivo no existe en S3: $ruta");
             return null;
+        }
+    }
+
+    public function deleteDocument($id)
+    {
+        $archivo = Archivo::query()->find($id);
+        if ($archivo) {
+            if (Storage::disk('archivos')->exists(urlencode($archivo->ruta))) {
+                Storage::disk('archivos')->delete(urlencode($archivo->ruta));
+            }
+            $archivo->delete();
         }
     }
 }

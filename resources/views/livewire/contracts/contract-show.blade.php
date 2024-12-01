@@ -16,10 +16,26 @@
             <div>
                 <h3 class="text-lg font-bold mb-2">Listado de Equipos asignados Actualmente</h3>
                 <ul>
-                    @dump($contract->equipos)
-                    <li>Equipo 1</li>
-                    <li>Equipo 2</li>
-                    <li>Equipo 3</li>
+                    @forelse($contract->contratoProductos as $productos)
+                        <li>
+                            @switch($productos?->producto?->productable_type)
+                                @case('App\Models\Concentrador')
+                                    Concentrador de Oxígeno:
+                                    @break
+                                @case('App\Models\Tanque')
+                                    Tanque de Oxígeno:
+                                    @break
+                                @case('App\Models\Regulador')
+                                    Regulador de Oxígeno:
+                                    @break
+                                @case('App\Models\Carrito')
+                                    Carrito de Oxígeno:
+                                    @break
+                            @endswitch
+                             {{ $productos->producto?->codigo }}</li>
+                    @empty
+                        <li>No Existen Equipos Asignados a este Paciente...</li>
+                    @endforelse
                 </ul>
             </div>
             <!-- Segunda Columna -->
@@ -91,7 +107,7 @@
                         <li class="mb-2 flex justify-between items-center">
                             {{ $archivo->nombre }}
                             <!-- Botón para abrir el modal -->
-                            <button wire:click="openModal('{{ $archivo->ruta }}')" class="bg-blue-500 text-white px-4 py-2 rounded">
+                            <button wire:click="openModal('{{ $archivo->id }}')" class="bg-blue-500 text-white px-4 py-2 rounded">
                                 Ver Documento
                             </button>
                         </li>
@@ -134,11 +150,10 @@
             <div class="bg-white p-6 rounded-lg shadow-lg w-1/2">
                 <h2 class="text-lg font-bold mb-4">Documento</h2>
 
-                @if($urlImagen)
-                    <!-- Mostrar el documento en un iframe -->
-                    <iframe id="documentIframe" src="{{ $urlImagen }}" width="100%" height="400px"></iframe>
+                @if($typeDocument === 'imagen')
+                    <img src="{{ route('archives.get', ['id' => $urlImagen]) }}" alt="">
                 @else
-                    <p>No se pudo cargar el documento.</p>
+                    <iframe id="documentIframe" src="{{ route('archives.get', ['id' => $urlImagen]) }}" width="100%" height="400px"></iframe>
                 @endif
 
                 <!-- Botones: cerrar y descargar -->

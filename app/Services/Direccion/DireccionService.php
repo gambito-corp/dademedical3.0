@@ -4,10 +4,13 @@ namespace App\Services\Direccion;
 
 use App\Interfaces\Direccion\DireccionInterface;
 use App\Models\Contrato;
+use App\Models\Paciente;
+use App\Services\Archivo\ArchivoService;
+use Illuminate\Support\Facades\DB;
 
 class DireccionService
 {
-    public function __construct(private DireccionInterface $direccionRepository)
+    public function __construct(private DireccionInterface $direccionRepository, protected ArchivoService $archivoService)
     {
     }
 
@@ -39,5 +42,34 @@ class DireccionService
         $contrato->direccion->responsable = $direccion['responsable'];
         return $this->direccionRepository->update(data: $contrato->direccion);
 
+    }
+
+    public function newDireccion(array $data, $file)
+    {
+        DB::beginTransaction();
+        $direccion = [
+            'contrato_id'   => $data['paciente_id'],
+            'distrito'      => $data['contrato_id'],
+            'distrito'      => $data['distrito'],
+            'calle'     => $data['direccion'],
+            'referencia'    => $data['referencia'],
+            'responsable'   => $data['responsable'],
+            "active"        => 0,
+            "fecha_cambio"  => now(),
+        ];
+
+        $deleted = $this->direccionRepository->deletePending($data['contrato_id']);
+        $this->direccionRepository->save($direccion);
+
+        $paciente = Paciente::query()->where('id', $data['paciente_id'])->first();
+        $this->archivoService->save(
+            ['documento_de_cambio_de_direccion' => $file],
+            $data["contrato_id"],
+            $data['paciente_id'],
+            $paciente->name,
+            $paciente->surname
+        );
+
+        DB::commit();
     }
 }

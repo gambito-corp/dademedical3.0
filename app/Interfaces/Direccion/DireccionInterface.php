@@ -9,4 +9,6 @@ interface DireccionInterface
     public function save($data);
     public function update($data);
     public function delete($id);
+
+    public function deletePending(mixed $contrato_id);
 }

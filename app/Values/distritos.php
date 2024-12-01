@@ -1,11 +1,14 @@
 <?php
 return [
+    'Callao' => 'Callao',
     'Ancón' => 'Ancón',
+    'Villa el Salvador' => 'Villa el Salvador',
+    'Villa Maria del Triunfo' => 'Villa Maria del Triunfo',
     'Ate' => 'Ate',
+    'La Perla' => 'La Perla',
     'Barranco' => 'Barranco',
     'Bellavista' => 'Bellavista',
     'Breña' => 'Breña',
-    'Callao' => 'Callao',
     'Carabayllo' => 'Carabayllo',
     'Carmen de la Legua Reynoso' => 'Carmen de la Legua Reynoso',
     'Cercado de Lima' => 'Cercado de Lima',
@@ -17,7 +20,6 @@ return [
     'Independencia' => 'Independencia',
     'Jesús maría' => 'Jesús maría',
     'La molina' => 'La molina',
-    'La Perla' => 'La Perla',
     'La Punta' => 'La Punta',
     'La victoria' => 'La victoria',
     'Lince' => 'Lince',
@@ -48,6 +50,4 @@ return [
     'Santiago de Surco' => 'Santiago de Surco',
     'Surquillo' => 'Surquillo',
     'Ventanilla' => 'Ventanilla',
-    'Villa el Salvador' => 'Villa el Salvador',
-    'Villa Maria del Triunfo' => 'Villa Maria del Triunfo',
 ];

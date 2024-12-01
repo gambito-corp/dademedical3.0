@@ -82,6 +82,38 @@ class Paciente extends Model
         return null;
     }
 
+    // Accessor para Dirección Pendiente
+    public function getDireccionPendienteAttribute()
+    {
+        $contrato = $this->contrato;
+
+        if ($contrato) {
+            // Verificamos si existen diagnósticos pendientes en el contrato
+            return $contrato->direccionPendientes()->exists();
+        }
+
+        return false;
+    }
+
+    // Accessor para idDireccionPendiente
+    public function getIdDireccionPendienteAttribute()
+    {
+        // Solo si existe un diagnóstico pendiente
+        if ($this->direccionPendiente) {
+            $contrato = $this->contrato;
+
+            if ($contrato) {
+                $direccionPendiente = $contrato->direccionPendientes()->first();
+
+                if ($direccionPendiente) {
+                    return $direccionPendiente->id;
+                }
+            }
+        }
+
+        return null;
+    }
+
     //Relaciones
 
     // Relación para obtener todos los archivos de un paciente a través de los contratos

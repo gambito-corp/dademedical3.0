@@ -49,6 +49,4 @@ Route::post('/email/verification-notification', function (Request $request) {
     return back()->with('message', 'Verification link sent!');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
 
-use Illuminate\Support\Facades\Storage;
-
-Route::get('/archives/{filename}', [ArchivoController::class, 'getUrl'])->name('archives.show');
+Route::get('archives/{id}', [ArchivoController::class, 'getFile'])->name('archives.get');

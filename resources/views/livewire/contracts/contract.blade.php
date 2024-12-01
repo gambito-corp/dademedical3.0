@@ -146,79 +146,79 @@
                                         @switch($currentFilter)
                                             @case('solicitado')
                                                 <td class="px-6 py-4 whitespace-no-wrap">
-                                                    {{ $contract->contratoFechas->fecha_solicitud ? Carbon\Carbon::parse($contract->contratoFechas->fecha_solicitud)->format('d/m/Y') : 'No asignada' }}
-                                                    {{ $contract->contratoFechas->fecha_solicitud ? Carbon\Carbon::parse($contract->contratoFechas->fecha_solicitud)->diffForHumans() : '' }}
+                                                    {{ $contract->contratoFechas?->fecha_solicitud ? Carbon\Carbon::parse($contract->contratoFechas?->fecha_solicitud)->format('d/m/Y') : 'No asignada' }}
+                                                    {{ $contract->contratoFechas?->fecha_solicitud ? Carbon\Carbon::parse($contract->contratoFechas?->fecha_solicitud)->diffForHumans() : '' }}
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-no-wrap">{{ $contract->usuarios->solicitante->name ?? 'No Asignado' }}</td>
                                                 @break
                                             @case('aprobado')
                                                 <td class="px-6 py-4 whitespace-no-wrap">
-                                                    {{ $contract->contratoFechas->fecha_solicitud ? Carbon\Carbon::parse($contract->contratoFechas->fecha_solicitud)->format('d/m/Y') : 'No asignada' }}
-                                                    {{ $contract->contratoFechas->fecha_solicitud ? Carbon\Carbon::parse($contract->contratoFechas->fecha_solicitud)->diffForHumans() : '' }}
+                                                    {{ $contract->contratoFechas?->fecha_solicitud ? Carbon\Carbon::parse($contract->contratoFechas?->fecha_solicitud)->format('d/m/Y') : 'No asignada' }}
+                                                    {{ $contract->contratoFechas?->fecha_solicitud ? Carbon\Carbon::parse($contract->contratoFechas?->fecha_solicitud)->diffForHumans() : '' }}
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-no-wrap">
-                                                    {{ $contract->contratoFechas->fecha_aprobacion ? Carbon\Carbon::parse($contract->contratoFechas->fecha_aprobacion)->format('d/m/Y') : 'No asignada' }}
-                                                    {{ $contract->contratoFechas->fecha_aprobacion ? Carbon\Carbon::parse($contract->contratoFechas->fecha_aprobacion)->diffForHumans() : '' }}
+                                                    {{ $contract->contratoFechas?->fecha_aprobacion ? Carbon\Carbon::parse($contract->contratoFechas?->fecha_aprobacion)->format('d/m/Y') : 'No asignada' }}
+                                                    {{ $contract->contratoFechas?->fecha_aprobacion ? Carbon\Carbon::parse($contract->contratoFechas?->fecha_aprobacion)->diffForHumans() : '' }}
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-no-wrap">{{ $contract->usuarios->solicitante->name ?? 'No Asignado' }}</td>
                                                 <td class="px-6 py-4 whitespace-no-wrap">{{ $contract->usuarios->aprobador->name ?? 'No Asignado' }}</td>
                                                 @break
                                             @case('rechazado')
                                                 <td class="px-6 py-4 whitespace-no-wrap">
-                                                    {{ $contract->contratoFechas->fecha_solicitud ? Carbon\Carbon::parse($contract->contratoFechas->fecha_solicitud)->format('d/m/Y') : 'No asignada' }}
-                                                    {{ $contract->contratoFechas->fecha_solicitud ? Carbon\Carbon::parse($contract->contratoFechas->fecha_solicitud)->diffForHumans() : '' }}
+                                                    {{ $contract->contratoFechas?->fecha_solicitud ? Carbon\Carbon::parse($contract->contratoFechas?->fecha_solicitud)->format('d/m/Y') : 'No asignada' }}
+                                                    {{ $contract->contratoFechas?->fecha_solicitud ? Carbon\Carbon::parse($contract->contratoFechas?->fecha_solicitud)->diffForHumans() : '' }}
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-no-wrap">
-                                                    {{ $contract->contratoFechas->fecha_rechazo ? Carbon\Carbon::parse($contract->contratoFechas->fecha_rechazo)->format('d/m/Y') : 'No asignada' }}
-                                                    {{ $contract->contratoFechas->fecha_rechazo ? Carbon\Carbon::parse($contract->contratoFechas->fecha_rechazo)->diffForHumans() : '' }}
+                                                    {{ $contract->contratoFechas?->fecha_rechazo ? Carbon\Carbon::parse($contract->contratoFechas?->fecha_rechazo)->format('d/m/Y') : 'No asignada' }}
+                                                    {{ $contract->contratoFechas?->fecha_rechazo ? Carbon\Carbon::parse($contract->contratoFechas?->fecha_rechazo)->diffForHumans() : '' }}
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-no-wrap">{{ $contract->usuarios->solicitante->name ?? 'No Asignado' }}</td>
                                                 <td class="px-6 py-4 whitespace-no-wrap">{{ $contract->usuarios->rechazador->name ?? 'No Asignado' }}</td>
                                                 @break
                                             @case('anulado')
                                                 <td class="px-6 py-4 whitespace-no-wrap">
-                                                    {{ $contract->contratoFechas->fecha_solicitud ? Carbon\Carbon::parse($contract->contratoFechas->fecha_solicitud)->format('d/m/Y') : 'No asignada' }}
-                                                    {{ $contract->contratoFechas->fecha_solicitud ? Carbon\Carbon::parse($contract->contratoFechas->fecha_solicitud)->diffForHumans() : '' }}
+                                                    {{ $contract->contratoFechas?->fecha_solicitud ? Carbon\Carbon::parse($contract->contratoFechas?->fecha_solicitud)->format('d/m/Y') : 'No asignada' }}
+                                                    {{ $contract->contratoFechas?->fecha_solicitud ? Carbon\Carbon::parse($contract->contratoFechas?->fecha_solicitud)->diffForHumans() : '' }}
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-no-wrap">
-                                                    {{ $contract->contratoFechas->fecha_anulacion ? Carbon\Carbon::parse($contract->contratoFechas->fecha_anulacion)->format('d/m/Y') : 'No asignada' }}
-                                                    {{ $contract->contratoFechas->fecha_anulacion ? Carbon\Carbon::parse($contract->contratoFechas->fecha_anulacion)->diffForHumans() : '' }}
+                                                    {{ $contract->contratoFechas?->fecha_anulacion ? Carbon\Carbon::parse($contract->contratoFechas?->fecha_anulacion)->format('d/m/Y') : 'No asignada' }}
+                                                    {{ $contract->contratoFechas?->fecha_anulacion ? Carbon\Carbon::parse($contract->contratoFechas?->fecha_anulacion)->diffForHumans() : '' }}
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-no-wrap">{{ $contract->usuarios->solicitante->name ?? 'No Asignado' }}</td>
                                                 <td class="px-6 py-4 whitespace-no-wrap">{{ $contract->usuarios->anulador->name ?? 'No Asignado' }}</td>
                                                 @break
                                             @case('entregado')
                                                 <td class="px-6 py-4 whitespace-no-wrap">
-                                                    {{ $contract->contratoFechas->fecha_solicitud ? Carbon\Carbon::parse($contract->contratoFechas->fecha_solicitud)->format('d/m/Y') : 'No asignada' }}
-                                                    {{ $contract->contratoFechas->fecha_solicitud ? Carbon\Carbon::parse($contract->contratoFechas->fecha_solicitud)->diffForHumans() : '' }}
+                                                    {{ $contract->contratoFechas?->fecha_solicitud ? Carbon\Carbon::parse($contract->contratoFechas?->fecha_solicitud)->format('d/m/Y') : 'No asignada' }}
+                                                    {{ $contract->contratoFechas?->fecha_solicitud ? Carbon\Carbon::parse($contract->contratoFechas?->fecha_solicitud)->diffForHumans() : '' }}
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-no-wrap">
-                                                    {{ $contract->contratoFechas->fecha_aprobacion ? Carbon\Carbon::parse($contract->contratoFechas->fecha_aprobacion)->format('d/m/Y') : 'No asignada' }}
-                                                    {{ $contract->contratoFechas->fecha_aprobacion ? Carbon\Carbon::parse($contract->contratoFechas->fecha_aprobacion)->diffForHumans() : '' }}
+                                                    {{ $contract->contratoFechas?->fecha_aprobacion ? Carbon\Carbon::parse($contract->contratoFechas?->fecha_aprobacion)->format('d/m/Y') : 'No asignada' }}
+                                                    {{ $contract->contratoFechas?->fecha_aprobacion ? Carbon\Carbon::parse($contract->contratoFechas?->fecha_aprobacion)->diffForHumans() : '' }}
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-no-wrap">
-                                                    {{ $contract->contratoFechas->fecha_entrega ? Carbon\Carbon::parse($contract->contratoFechas->fecha_entrega)->format('d/m/Y') : 'No asignada' }}
-                                                    {{ $contract->contratoFechas->fecha_entrega ? Carbon\Carbon::parse($contract->contratoFechas->fecha_entrega)->diffForHumans() : '' }}
+                                                    {{ $contract->contratoFechas?->fecha_entrega ? Carbon\Carbon::parse($contract->contratoFechas?->fecha_entrega)->format('d/m/Y') : 'No asignada' }}
+                                                    {{ $contract->contratoFechas?->fecha_entrega ? Carbon\Carbon::parse($contract->contratoFechas?->fecha_entrega)->diffForHumans() : '' }}
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-no-wrap">{{ $contract->usuarios->solicitante->name ?? 'No Asignado' }}</td>
                                                 <td class="px-6 py-4 whitespace-no-wrap">{{ $contract->usuarios->aprobador->name ?? 'No Asignado' }}</td>
                                                 @break
                                             @case('recogido')
                                                 <td class="px-6 py-4 whitespace-no-wrap">
-                                                    {{ $contract->contratoFechas->fecha_solicitud ? Carbon\Carbon::parse($contract->contratoFechas->fecha_solicitud)->format('d/m/Y') : 'No asignada' }}
-                                                    {{ $contract->contratoFechas->fecha_solicitud ? Carbon\Carbon::parse($contract->contratoFechas->fecha_solicitud)->diffForHumans() : '' }}
+                                                    {{ $contract->contratoFechas?->fecha_solicitud ? Carbon\Carbon::parse($contract->contratoFechas?->fecha_solicitud)->format('d/m/Y') : 'No asignada' }}
+                                                    {{ $contract->contratoFechas?->fecha_solicitud ? Carbon\Carbon::parse($contract->contratoFechas?->fecha_solicitud)->diffForHumans() : '' }}
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-no-wrap">
-                                                    {{ $contract->contratoFechas->fecha_aprobacion ? Carbon\Carbon::parse($contract->contratoFechas->fecha_aprobacion)->format('d/m/Y') : 'No asignada' }}
-                                                    {{ $contract->contratoFechas->fecha_aprobacion ? Carbon\Carbon::parse($contract->contratoFechas->fecha_aprobacion)->diffForHumans() : '' }}
+                                                    {{ $contract->contratoFechas?->fecha_aprobacion ? Carbon\Carbon::parse($contract->contratoFechas?->fecha_aprobacion)->format('d/m/Y') : 'No asignada' }}
+                                                    {{ $contract->contratoFechas?->fecha_aprobacion ? Carbon\Carbon::parse($contract->contratoFechas?->fecha_aprobacion)->diffForHumans() : '' }}
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-no-wrap">
-                                                    {{ $contract->contratoFechas->fecha_entrega ? Carbon\Carbon::parse($contract->contratoFechas->fecha_entrega)->format('d/m/Y') : 'No asignada' }}
-                                                    {{ $contract->contratoFechas->fecha_entrega ? Carbon\Carbon::parse($contract->contratoFechas->fecha_entrega)->diffForHumans() : '' }}
+                                                    {{ $contract->contratoFechas?->fecha_entrega ? Carbon\Carbon::parse($contract->contratoFechas?->fecha_entrega)->format('d/m/Y') : 'No asignada' }}
+                                                    {{ $contract->contratoFechas?->fecha_entrega ? Carbon\Carbon::parse($contract->contratoFechas?->fecha_entrega)->diffForHumans() : '' }}
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-no-wrap">
-                                                    {{ $contract->contratoFechas->fecha_recogida ? Carbon\Carbon::parse($contract->contratoFechas->fecha_recogida)->format('d/m/Y') : 'No asignada' }}
-                                                    {{ $contract->contratoFechas->fecha_recogida ? Carbon\Carbon::parse($contract->contratoFechas->fecha_recogida)->diffForHumans() : '' }}
+                                                    {{ $contract->contratoFechas?->fecha_recogida ? Carbon\Carbon::parse($contract->contratoFechas?->fecha_recogida)->format('d/m/Y') : 'No asignada' }}
+                                                    {{ $contract->contratoFechas?->fecha_recogida ? Carbon\Carbon::parse($contract->contratoFechas?->fecha_recogida)->diffForHumans() : '' }}
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-no-wrap">{{ $contract->usuarios->solicitante->name ?? 'No Asignado' }}</td>
                                                 <td class="px-6 py-4 whitespace-no-wrap">{{ $contract->usuarios->aprobador->name ?? 'No Asignado' }}</td>
@@ -226,24 +226,24 @@
                                                 @break
                                             @case('finalizado')
                                                 <td class="px-6 py-4 whitespace-no-wrap">
-                                                    {{ $contract->contratoFechas->fecha_solicitud ? Carbon\Carbon::parse($contract->contratoFechas->fecha_solicitud)->format('d/m/Y') : 'No asignada' }}
-                                                    {{ $contract->contratoFechas->fecha_solicitud ? Carbon\Carbon::parse($contract->contratoFechas->fecha_solicitud)->diffForHumans() : '' }}
+                                                    {{ $contract->contratoFechas?->fecha_solicitud ? Carbon\Carbon::parse($contract->contratoFechas?->fecha_solicitud)->format('d/m/Y') : 'No asignada' }}
+                                                    {{ $contract->contratoFechas?->fecha_solicitud ? Carbon\Carbon::parse($contract->contratoFechas?->fecha_solicitud)->diffForHumans() : '' }}
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-no-wrap">
-                                                    {{ $contract->contratoFechas->fecha_aprobacion ? Carbon\Carbon::parse($contract->contratoFechas->fecha_aprobacion)->format('d/m/Y') : 'No asignada' }}
-                                                    {{ $contract->contratoFechas->fecha_aprobacion ? Carbon\Carbon::parse($contract->contratoFechas->fecha_aprobacion)->diffForHumans() : '' }}
+                                                    {{ $contract->contratoFechas?->fecha_aprobacion ? Carbon\Carbon::parse($contract->contratoFechas?->fecha_aprobacion)->format('d/m/Y') : 'No asignada' }}
+                                                    {{ $contract->contratoFechas?->fecha_aprobacion ? Carbon\Carbon::parse($contract->contratoFechas?->fecha_aprobacion)->diffForHumans() : '' }}
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-no-wrap">
-                                                    {{ $contract->contratoFechas->fecha_entrega ? Carbon\Carbon::parse($contract->contratoFechas->fecha_entrega)->format('d/m/Y') : 'No asignada' }}
-                                                    {{ $contract->contratoFechas->fecha_entrega ? Carbon\Carbon::parse($contract->contratoFechas->fecha_entrega)->diffForHumans() : '' }}
+                                                    {{ $contract->contratoFechas?->fecha_entrega ? Carbon\Carbon::parse($contract->contratoFechas?->fecha_entrega)->format('d/m/Y') : 'No asignada' }}
+                                                    {{ $contract->contratoFechas?->fecha_entrega ? Carbon\Carbon::parse($contract->contratoFechas?->fecha_entrega)->diffForHumans() : '' }}
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-no-wrap">
-                                                    {{ $contract->contratoFechas->fecha_recogida ? Carbon\Carbon::parse($contract->contratoFechas->fecha_recogida)->format('d/m/Y') : 'No asignada' }}
-                                                    {{ $contract->contratoFechas->fecha_recogida ? Carbon\Carbon::parse($contract->contratoFechas->fecha_recogida)->diffForHumans() : '' }}
+                                                    {{ $contract->contratoFechas?->fecha_recogida ? Carbon\Carbon::parse($contract->contratoFechas?->fecha_recogida)->format('d/m/Y') : 'No asignada' }}
+                                                    {{ $contract->contratoFechas?->fecha_recogida ? Carbon\Carbon::parse($contract->contratoFechas?->fecha_recogida)->diffForHumans() : '' }}
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-no-wrap">
-                                                    {{ $contract->contratoFechas->fecha_finalizacion ? Carbon\Carbon::parse($contract->contratoFechas->fecha_finalizacion)->format('d/m/Y') : 'No asignada' }}
-                                                    {{ $contract->contratoFechas->fecha_finalizacion ? Carbon\Carbon::parse($contract->contratoFechas->fecha_finalizacion)->diffForHumans() : '' }}
+                                                    {{ $contract->contratoFechas?->fecha_finalizacion ? Carbon\Carbon::parse($contract->contratoFechas?->fecha_finalizacion)->format('d/m/Y') : 'No asignada' }}
+                                                    {{ $contract->contratoFechas?->fecha_finalizacion ? Carbon\Carbon::parse($contract->contratoFechas?->fecha_finalizacion)->diffForHumans() : '' }}
                                                 </td>
                                                 <td class="px-6 py-4 whitespace-no-wrap">{{ $contract->usuarios->solicitante->name ?? 'No Asignado' }}</td>
                                                 <td class="px-6 py-4 whitespace-no-wrap">{{ $contract->usuarios->aprobador->name ?? 'No Asignado' }}</td>

@@ -5,6 +5,7 @@ namespace App\Livewire\Patients;
 use App\Models\Hospital;
 use App\Models\Paciente;
 use App\Services\Paciente\PacienteService;
+use Dflydev\DotAccessData\Data;
 use Illuminate\Support\Facades\App;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -19,7 +20,24 @@ class CreatePatient extends Component
     public $hospitals, $roles, $distritos;
     public $currentStep = 1;
     public $totalSteps = 4;
-    public $paciente = [];
+    public $paciente = [
+//        'hospital' => null,
+//        'documento_tipo' => 'DNI',
+//        'numero_documento' => '',
+        'nombres' => '',
+        'apellidos' => '',
+//        'tipo_origen' => null,
+//        'edad' => null,
+//        'traqueotomia' => false,
+//        'horas_oxigeno' => null,
+//        'dosis' => '',
+//        'diagnostico' => '',
+//        'historia_clinica' => '',
+//        'distrito' => null,
+//        'direccion' => '',
+//        'referencia' => '',
+//        'familiar_responsable' => '',
+    ];
     public $telefonos = [''];
     public $reingreso = false;
 
@@ -230,7 +248,6 @@ class CreatePatient extends Component
 
     public function save()
     {
-        //TODO: Agregar Load al Momento de Guardado...
         $this->validateCurrentStep();
 
         // Sanitize and format 'dosis' and 'horas_oxigeno'

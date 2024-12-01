@@ -65,7 +65,7 @@ class RequestDose extends Component
 
     public function update()
     {
-        dd($this->file);
+//        dd($this->file);
     }
     // Reglas de validación
     protected function rules()

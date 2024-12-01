@@ -30,7 +30,7 @@ class DiagnosticoRepository implements DiagnosticoInterface
     {
         $diagnosticosPendientes = $this->diagnostico->where('contrato_id', $contrato_id)->where('active', 0)->get();
         foreach ($diagnosticosPendientes as $diagnostico) {
-            $diagnostico->delete();
+            $diagnostico->forceDelete();
         }
     }
 }

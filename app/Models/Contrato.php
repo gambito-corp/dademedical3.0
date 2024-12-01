@@ -64,6 +64,11 @@ class Contrato extends Model
         return $this->diagnosticosAprobados()->latest('id')->first();
     }
 
+    public function direccion()
+    {
+        return $this->hasOne(Direccion::class)->where('active', 1)->latest('id');
+    }
+
     public function direcciones()
     {
         return $this->hasMany(Direccion::class);
@@ -73,14 +78,18 @@ class Contrato extends Model
     {
         return $this->direcciones()->where('active', 1);
     }
+    public function direccionPendientes()
+    {
+        return $this->direcciones()->where('active', 0);
+    }
+
     public function ultimaDireccionAprobada()
     {
         return $this->direccionAprobadas()->latest('id')->first();
     }
-
-    public function direccion()
+    public function ultimaDireccionPendiente()
     {
-        return $this->hasOne(Direccion::class)->latest('id');
+        return $this->direccionPendientes()->latest('id')->first();
     }
 
     public function telefonos()
@@ -108,5 +117,10 @@ class Contrato extends Model
     public function contratoProductos()
     {
         return $this->hasMany(ContratoProducto::class);
+    }
+
+    public function incidencias()
+    {
+        return $this->hasMany(Incidencia::class);
     }
 }

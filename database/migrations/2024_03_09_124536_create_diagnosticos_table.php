@@ -19,6 +19,7 @@ return new class extends Migration
             $table->boolean('active');
             $table->datetime('fecha_cambio')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

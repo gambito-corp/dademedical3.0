@@ -86,16 +86,6 @@
                                     <th  wire:click="sortBy('fecha_solicitud')" class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider cursor-pointer">
                                         {{  __('paciente.Fecha de ingreso')}} @if($orderColumn == 'fecha_ingreso') <i class="fas fa-sort-{{$orderDirection == 'asc' ? 'up' : 'down'}}"></i> @endif
                                     </th>
-{{--                                    @if($currentFilter == 'active')--}}
-{{--                                        <th  wire:click="sortBy('fecha_entrega')" class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider cursor-pointer">--}}
-{{--                                            {{  __('paciente.Fecha de entrega')}} @if($orderColumn == 'fecha_ingreso') <i class="fas fa-sort-{{$orderDirection == 'asc' ? 'up' : 'down'}}"></i> @endif--}}
-{{--                                        </th>--}}
-{{--                                    @else--}}
-{{--                                        <th  wire:click="sortBy('fecha_finalizado')" class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider cursor-pointer">--}}
-{{--                                            {{  __('paciente.Fecha de finalizado')}} @if($orderColumn == 'fecha_ingreso') <i class="fas fa-sort-{{$orderDirection == 'asc' ? 'up' : 'down'}}"></i> @endif--}}
-{{--                                        </th>--}}
-{{--                                    @endif--}}
-
 
                                     <th class="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                                         {{ __('paciente.Actions') }}
@@ -169,27 +159,6 @@
                                                 </div>
                                             </div>
                                         </td>
-{{--                                        @if($currentFilter == 'active')--}}
-{{--                                            <td class="px-6 py-4 whitespace-no-wrap">--}}
-{{--                                                <div class="flex items-center">--}}
-{{--                                                    <div>--}}
-{{--                                                        <div class="text-sm leading-5 text-gray-900">--}}
-{{--                                                            {{ $item->contrato?->contratoFechas?->fecha_entrega ?? 'N/A' }}--}}
-{{--                                                        </div>--}}
-{{--                                                    </div>--}}
-{{--                                                </div>--}}
-{{--                                            </td>--}}
-{{--                                        @else--}}
-{{--                                            <td class="px-6 py-4 whitespace-no-wrap">--}}
-{{--                                                <div class="flex items-center">--}}
-{{--                                                    <div>--}}
-{{--                                                        <div class="text-sm leading-5 text-gray-900">--}}
-{{--                                                            {{ $item->contrato?->contratoFechas?->fecha_finalizado ?? 'N/A' }}--}}
-{{--                                                        </div>--}}
-{{--                                                    </div>--}}
-{{--                                                </div>--}}
-{{--                                            </td>--}}
-{{--                                        @endif--}}
 
                                         <td class="px-6 py-4 whitespace-no-wrap">
                                             <div class="flex items-center">
@@ -209,6 +178,35 @@
                                                             wire:click="openModal('changeDose', {{ $item->id }})">
                                                             <i class="fas fa-syringe"></i>
                                                         </button>
+                                                        <!-- Botón para solicitar un cambio de Direccion -->
+                                                        <button
+                                                            class="text-blue-500 hover:text-blue-700"
+                                                            title="{{ __('paciente.Request Direction Change') }}"
+                                                            wire:click="openModal('changeDirecction', {{ $item->id }})">
+                                                            <i class="fa-solid fa-location-dot"></i>
+                                                        </button>
+
+
+
+
+                                                        <!-- Botón para abrir una incidencia -->
+                                                        <button
+                                                            class="text-red-500 hover:text-red-700"
+                                                            title="{{ __('paciente.Open Incident') }}"
+                                                            wire:click="openModal('incidence', {{ $item->id }})">
+                                                            <i class="fas fa-exclamation-triangle"></i>
+                                                        </button>
+                                                        {{--
+                                                           <!-- Botón para dar de alta al paciente -->
+                                                           @can('dar-alta')
+                                                               <button
+                                                                   class="text-gray-500 hover:text-gray-700"
+                                                                   title="{{ __('paciente.Discharge Patient') }}"
+                                                                   wire:click="openModal('alta', {{ $item->id }})">
+                                                                   <i class="fas fa-user-times"></i>
+                                                               </button>
+                                                           @endcan
+                                                       --}}
 
                                                         <!-- Botón para aprobar un cambio de dosis -->
                                                         @can('aprobar-dosis')
@@ -222,43 +220,17 @@
                                                             @endif
                                                         @endcan
 
-                                                        {{--
-                                                        <!-- Botón para solicitar un cambio de dirección -->
-                                                        <button
-                                                            class="text-yellow-500 hover:text-yellow-700"
-                                                            title="{{ __('paciente.Request Address Change') }}"
-                                                            wire:click="openModal('changeDirecction', {{ $item->id }})">
-                                                            <i class="fas fa-map-marker-alt"></i>
-                                                        </button>
-
                                                         <!-- Botón para aprobar un cambio de dirección -->
                                                         @can('aprobar-direccion')
-                                                            <button
-                                                                class="text-orange-500 hover:text-orange-700"
-                                                                title="{{ __('paciente.Approve Address Change') }}"
-                                                                wire:click="openModal('aproveDirecction', {{ $item->id }})">
-                                                                <i class="fas fa-check"></i>
-                                                            </button>
+                                                            @if($item->direccionPendiente)
+                                                                <button
+                                                                    class="text-indigo-500 hover:text-indigo-700"
+                                                                    title="{{ __('paciente.Approve Address Change') }}"
+                                                                    wire:click="openModal('aproveDirecction', {{ $item->id }})">
+                                                                    <i class="fas fa-thumbs-up"></i>
+                                                                </button>
+                                                            @endif
                                                         @endcan
-
-                                                        <!-- Botón para abrir una incidencia -->
-                                                        <button
-                                                            class="text-red-500 hover:text-red-700"
-                                                            title="{{ __('paciente.Open Incident') }}"
-                                                            wire:click="openModal('incidence', {{ $item->id }})">
-                                                            <i class="fas fa-exclamation-triangle"></i>
-                                                        </button>
-
-                                                        <!-- Botón para dar de alta al paciente -->
-                                                        @can('dar-alta')
-                                                            <button
-                                                                class="text-gray-500 hover:text-gray-700"
-                                                                title="{{ __('paciente.Discharge Patient') }}"
-                                                                wire:click="openModal('alta', {{ $item->id }})">
-                                                                <i class="fas fa-user-times"></i>
-                                                            </button>
-                                                        @endcan
---}}
                                                     </div>
                                                 </div>
                                             </div>
@@ -306,8 +278,6 @@
             <x-slot name="content">
                 <livewire:patients.edit-patient :patientId="$paciente->id"/>
             </x-slot>
-{{--            <x-slot name="content">--}}
-{{--            </x-slot>--}}
             <x-slot name="footer"></x-slot>
         </x-dialog-modal>
     @endif
@@ -366,49 +336,52 @@
             <x-slot name="footer"></x-slot>
         </x-dialog-modal>
     @endif
-    {{--
+
     @if($modalChangeDirecctionRequest)
         <x-dialog-modal wire:model="modalChangeDirecctionRequest" :maxWidth="'full'">
             <x-slot name="title">
                 {{ __('paciente.Request Address Change') }}
             </x-slot>
             <x-slot name="content">
-
+                <livewire:patients.request-direction :patient-id="$paciente->id"/>
             </x-slot>
             <x-slot name="footer"></x-slot>
         </x-dialog-modal>
     @endif
+
     @if($modalChangeDirecctionApproval)
         <x-dialog-modal wire:model="modalChangeDirecctionApproval" :maxWidth="'full'">
             <x-slot name="title">
                 {{ __('paciente.Approve Address Change') }}
             </x-slot>
             <x-slot name="content">
-
+                <livewire:patients.approve-direction :patient-id="$paciente->id"/>
             </x-slot>
             <x-slot name="footer"></x-slot>
         </x-dialog-modal>
     @endif
+
     @if($modalIncidence)
-        <x-dialog-modal wire:model="modalIncidence" :maxWidth="'full'">
-            <x-slot name="title">
-                {{ __('paciente.Open Incident') }}
-            </x-slot>
-            <x-slot name="content">
-
-            </x-slot>
-            <x-slot name="footer"></x-slot>
-        </x-dialog-modal>
+    <x-dialog-modal wire:model="modalIncidence" :maxWidth="'full'">
+        <x-slot name="title">
+            {{ __('paciente.Open Incident') }}
+        </x-slot>
+        <x-slot name="content">
+            <livewire:patients.open-incidence :patient-id="$paciente->id"/>
+        </x-slot>
+        <x-slot name="footer"></x-slot>
+    </x-dialog-modal>
     @endif
-    @if($modalAlta)
-        <x-dialog-modal wire:model="modalAlta" :maxWidth="'full'">
-            <x-slot name="title">
-                {{ __('paciente.Discharge Patient') }}
-            </x-slot>
-            <x-slot name="content">
+    {{--
+@if($modalAlta)
+<x-dialog-modal wire:model="modalAlta" :maxWidth="'full'">
+<x-slot name="title">
+    {{ __('paciente.Discharge Patient') }}
+</x-slot>
+<x-slot name="content">
 
-            </x-slot>
-            <x-slot name="footer"></x-slot>
-        </x-dialog-modal>
-    @endif--}}
+</x-slot>
+<x-slot name="footer"></x-slot>
+</x-dialog-modal>
+@endif--}}
 </div>

@@ -23,6 +23,7 @@ class CreateDireccionesTable extends Migration
             $table->datetime('fecha_cambio')->nullable();
             $table->boolean('active')->default(false);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

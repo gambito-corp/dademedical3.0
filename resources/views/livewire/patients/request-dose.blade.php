@@ -16,7 +16,10 @@
             @enderror
         </div>
 
-        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">{{ __('paciente.Save') }}</button>
+        <button wire:loading.remove type="submit" class="bg-green-500 text-white px-4 py-2 rounded">{{ __('paciente.Save') }}</button>
+        <div wire:loading>
+            Requesting new Dose...
+        </div>
 
         @if($archivosCambioDosis->isNotEmpty())
             <div class="file-slider relative w-full max-w-2xl mx-auto mt-6">

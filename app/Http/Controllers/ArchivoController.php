@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Archivo;
 use App\Services\Archivo\ArchivoService;
+use Hashids\Hashids;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ArchivoController extends Controller
 {
@@ -22,6 +27,23 @@ class ArchivoController extends Controller
             return redirect($url);
         } else {
             abort(404, 'El archivo no existe');
+        }
+    }
+
+
+    public function getFile($id)
+    {
+        $hash = new Hashids();
+        $id = $hash->decode($id)[0];
+
+        if (Auth::user()){
+            $file = Archivo::query()->where('id', $id)->first();
+            $archivo = Storage::disk('archivos')->get($file->ruta);
+            $code = 200;
+            $type = Storage::disk('archivos')->mimeType($file->ruta);
+            return new Response($archivo, $code, ['Content-Type' => $type]);
+        }else{
+            return response()->json(['message' => 'No autorizado'], 401);
         }
     }
 }

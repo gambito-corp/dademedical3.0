@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'El Paciente' => 'Patient',
     'Patients Panel' => 'Patients Panel',
     'Basic Information' => 'Basic Information',
     'Hospital' => 'Hospital',
