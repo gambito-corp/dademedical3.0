@@ -32,7 +32,7 @@
                 {{ __('Crear Incidencia') }}
             </button>
             <div wire:loading>
-                Saving Dose...
+                Saving Incidence...
             </div>
         </div>
     </form>

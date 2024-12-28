@@ -41,17 +41,20 @@ class OpenIncidence extends Component
     public function submit()
     {
         $this->validate();
-        dd($this->patient->contrato->id);
 
-        Incidencia::query()->create([
-            'contract_id' => $this->patient->contrato->id,
-            'user_id' => auth()->id(),
-            'tipo_incidencia' => $this->incidenceType,
-            'incidencia' => $this->description,
-            'active' => true,
-            'fecha_incidencia' => now(),
-        ]);
-        $this->dispatch('incidence');
+        try {
+            $incidencia = Incidencia::query()->create([
+                'contrato_id' => $this->patient->contrato->id,
+                'user_id' => auth()->id(),
+                'tipo_incidencia' => $this->incidenceType,
+                'incidencia' => $this->description,
+                'active' => true,
+                'fecha_incidencia' => now(),
+            ]);
+            $this->dispatch('closeModal', 'incidence');
+        }catch (\Exception $e){
+            dd($e->getMessage(), $e);
+        }
         $this->reset();
     }
     public function render()
@@ -60,6 +63,6 @@ class OpenIncidence extends Component
     }
     public function close()
     {
-        $this->dispatch('closeModal', 'changeDirecction');
+        $this->dispatch('closeModal', 'incidence');
     }
 }
