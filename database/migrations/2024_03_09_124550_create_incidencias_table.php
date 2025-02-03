@@ -21,6 +21,7 @@ return new class extends Migration
             $table->timestamp('fecha_incidencia');
             $table->timestamp('fecha_respuesta')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

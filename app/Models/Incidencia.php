@@ -4,11 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Incidencia extends Model
 {
-    use HasFactory;
-
+    use HasFactory, SoftDeletes;
     protected $fillable = [
         'contrato_id',
         'user_id',
@@ -19,6 +19,10 @@ class Incidencia extends Model
         'active',
         'fecha_incidencia',
         'fecha_respuesta',
+    ];
+
+    protected $casts = [
+        'active' => 'boolean'
     ];
 
     public function contrato()

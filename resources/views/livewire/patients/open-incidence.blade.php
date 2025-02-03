@@ -1,7 +1,7 @@
 <div>
     <form wire:submit.prevent="submit">
         <div class="mb-4">
-            <h2 class="font-semibold text-xl">{{ __('Reporte de Incidencias') }}</h2>
+            <h2 class="font-semibold text-xl">{{ __('Reporte de Incidencia') }}</h2>
         </div>
 
 
