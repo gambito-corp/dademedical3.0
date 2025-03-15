@@ -18,18 +18,6 @@ use Livewire\Attributes\On;
     public $contracts, $contract;
     public string $filter = 'solicitado';
     public string $currentFilter = 'solicitado';
-    /*public bool
-        $modalCreate = false,
-        $modalEdit = false,
-        $modalShow = false,
-        $modalDelete = false,
-        $showDropdown = false,
-        $modalChangeDoseRequest = false,
-        $modalChangeDoseApproval = false,
-        $modalChangeDirecctionRequest = false,
-        $modalChangeDirecctionApproval = false,
-        $modalIncidence = false,
-        $modalAlta = false;*/
 
     public function boot(ContratoService $contractService) : void
     {

@@ -15,4 +15,8 @@ return [
     'Incidences' => 'Incidencia',
     'Inventory' => 'Inventario',
     'Contracts' => 'Contratos',
+    'Consumibles' => 'Consumibles',
+    'Mantenimiento' => 'Mantenimientos',
+    'Maquinas' => 'Maquinas',
+    'Reportes' => 'Reportes',
 ];

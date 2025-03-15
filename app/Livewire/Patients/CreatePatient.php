@@ -48,7 +48,7 @@ class CreatePatient extends Component
 
     public function mount(): void
     {
-        App::setLocale(session('locale'));
+//        App::setLocale(session('locale'));
         $this->hospitals = Hospital::all()->pluck('acronimo', 'id');
         $this->distritos = include base_path('app/Values/distritos.php');
         $this->roles = Role::all()->pluck('name', 'id');

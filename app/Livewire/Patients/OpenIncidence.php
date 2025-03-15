@@ -24,7 +24,7 @@ class OpenIncidence extends Component
 
     public function mount($patientId)
     {
-        App::setLocale(session('locale'));
+//        App::setLocale(session('locale'));
         $this->patientId = $patientId;
         $this->patient = $this->patientService->findWithTrashed($this->patientId)
             ->load(['contrato.incidencias']);
@@ -33,7 +33,7 @@ class OpenIncidence extends Component
     protected function rules()
     {
         return [
-            'incidenceType' => 'required',
+            'incidenceType' => 'required|in:fallo de maquina,fallo de accesorio,fallo de manipulacion,otros',
             'description' => 'required',
         ];
     }

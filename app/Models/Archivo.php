@@ -29,6 +29,7 @@ class Archivo extends Model
     const TIPO_INFORME_INCIDENCIA = 'informe de incidencia';
     const TIPO_RESPUESTA_INCIDENCIA = 'respuesta de incidencia';
     const TIPO_RECOJO_DISPOSITIVOS = 'documento de recojo de dispositivos';
+    const TIPO_RESOLUCION_INCIDENCIA = 'resolucion de incidencia';
 
     public function contratos()
     {

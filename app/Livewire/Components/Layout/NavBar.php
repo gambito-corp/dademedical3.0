@@ -60,6 +60,30 @@ class NavBar extends Component
                 'active' => request()->routeIs('contracts.*'),
                 'roles' => ['*']
             ],
+            [
+                'name' => __('dashboard.Consumibles'),
+                'route' => 'consumibles.index',
+                'active' => request()->routeIs('consumibles.*'),
+                'roles' => ['*']
+            ],
+            [
+                'name' => __('dashboard.Mantenimiento'),
+                'route' => 'mantenimientos.index',
+                'active' => request()->routeIs('mantenimientos.*'),
+                'roles' => ['*']
+            ],
+            [
+                'name' => __('dashboard.Maquinas'),
+                'route' => 'maquinas.index',
+                'active' => request()->routeIs('maquinas.*'),
+                'roles' => ['*']
+            ],
+            [
+                'name' => __('dashboard.Reportes'),
+                'route' => 'reportes.index',
+                'active' => request()->routeIs('reportes.*'),
+                'roles' => ['*']
+            ],
         ];
 
         // Filtrar los enlaces según los roles del usuario

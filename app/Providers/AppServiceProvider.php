@@ -7,6 +7,7 @@ use App\Interfaces\Contrato\ContratoInterface;
 use App\Interfaces\Diagnostico\DiagnosticoInterface;
 use App\Interfaces\Direccion\DireccionInterface;
 use App\Interfaces\Incidencia\IncidenciaInterface;
+use App\Interfaces\Inventario\InventarioInterface;
 use App\Interfaces\Logs\LogInterface;
 use App\Interfaces\Paciente\PacienteInterface;
 use App\Interfaces\Telefono\TelefonoInterface;
@@ -16,6 +17,7 @@ use App\Repositories\Contrato\ContratoRepository;
 use App\Repositories\Diagnostico\DiagnosticoRepository;
 use App\Repositories\Direccion\DireccionRepository;
 use App\Repositories\Incidencia\IncidenciaRepository;
+use App\Repositories\Inventario\InventarioRepository;
 use App\Repositories\Logs\LogsRepository;
 use App\Repositories\Paciente\PacienteRepository;
 use App\Repositories\Telefono\TelefonoRepository;
@@ -36,6 +38,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(DireccionInterface::class, DireccionRepository::class);
         $this->app->bind(IncidenciaInterface::class, IncidenciaRepository::class);
         $this->app->bind(TelefonoInterface::class, TelefonoRepository::class);
+        $this->app->bind(InventarioInterface::class, InventarioRepository::class);
     }
 
     public function boot(): void

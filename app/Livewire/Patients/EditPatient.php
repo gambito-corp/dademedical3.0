@@ -33,7 +33,7 @@ class EditPatient extends Component
 
     public function mount($patientId): void
     {
-        App::setLocale(session('locale'));
+//        App::setLocale(session('locale'));
 
         // Cargamos el paciente con sus relaciones
         $this->patient = Paciente::query()->with([

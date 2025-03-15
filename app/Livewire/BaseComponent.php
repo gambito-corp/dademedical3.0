@@ -15,9 +15,7 @@ class BaseComponent extends Component
     public array $paginacion = [10, 15, 20, 25, 30, 35, 40, 45, 50, 60, 70, 80, 90, 100, 200, 300, 400, 500, 1000];
 
     public function mount()
-    {
-        App::setLocale(session('locale'));
-    }
+    {}
     public function sortBy(string $column) : void
     {
         if ($this->orderColumn === $column) {

@@ -13,13 +13,13 @@ class LanguageSwitcher extends Component
 
     public function mount()
     {
-        $this->currentLanguage = session('locale');
-        App::setLocale($this->currentLanguage);
+//        $this->currentLanguage = session('locale');
+//        App::setLocale($this->currentLanguage);
     }
     public function setLanguage($lang)
     {
-        Session::put('locale', $lang);
-        App::setLocale($lang);
+//        Session::put('locale', $lang);
+//        App::setLocale($lang);
 
         return redirect()->route('dashboard');
     }

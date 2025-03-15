@@ -5,6 +5,13 @@
         </h2>
     </x-slot>
     <div class="py-4">
+        @if(session()->has('validation_errors'))
+            <div class="alert alert-danger">
+                @foreach(session('validation_errors')->all() as $error)
+                    {{ $error }}<br>
+                @endforeach
+            </div>
+        @endif
         <div class="max-w-screen mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200 space-y-4">

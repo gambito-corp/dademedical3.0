@@ -35,7 +35,7 @@ class RequestDose extends Component
 
     public function mount(): void
     {
-        App::setLocale(session('locale'));
+//        App::setLocale(session('locale'));
 
         // Cargar el paciente y el contrato
         $this->patient = $this->patientService->findWithTrashed($this->patientId)

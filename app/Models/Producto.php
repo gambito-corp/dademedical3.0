@@ -12,8 +12,26 @@ class Producto extends Model
     protected $table = 'productos';
 
     protected $fillable = ['codigo', 'contrato_id', 'activo', 'fecha_mantenimiento'];
+
+    public function getEstadoAttribute()
+    {
+        if ($this->activo) {
+            return 'Almacen';
+        } elseif ($this->contrato_id) {
+            return 'Alquilado';
+        } elseif (!$this->activo) {
+            return 'Mantenimiento';
+//        } elseif(!$this->activo && ) {
+//            return 'Retirado';
+        }
+    }
+
     public function productable()
     {
         return $this->morphTo();
+    }
+    public function contrato()
+    {
+        return $this->belongsTo(Contrato::class);
     }
 }

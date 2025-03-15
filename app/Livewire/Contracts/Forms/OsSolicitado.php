@@ -265,6 +265,8 @@ class OsSolicitado extends Component
         $producto = Producto::query()->find($productoId);
         if ($producto) {
             $producto->contrato_id = $this->contract->id;
+            $producto->activo = 0;
+            $producto->fecha_mantenimiento = now()->addMonths(6);
             $producto->save();
 
             $vinculacionPivote = new ContratoProducto();

@@ -23,17 +23,17 @@ class SetLocale
 
     public function handle(Request $request, Closure $next)
     {
-        // Verificar si hay un parámetro de idioma en la URL
-        if ($request->has('locale')) {
-            $locale = $request->get('locale');
-            Session::put('locale', $locale);
-        }
+//        // Verificar si hay un parámetro de idioma en la URL
+//        if ($request->has('locale')) {
+//            $locale = $request->get('locale');
+//            Session::put('locale', $locale);
+//        }
 
         // Si no hay parámetro en la URL, usar el valor almacenado en la sesión
-        $locale = Session::get('locale', config('app.locale'));
+//        $locale = Session::get('locale', config('app.locale'));
 
         // Establecer el idioma de la aplicación
-        App::setLocale($locale);
+//        App::setLocale($locale);
 
         return $next($request);
     }

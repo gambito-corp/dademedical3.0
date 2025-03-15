@@ -2,11 +2,15 @@
 
 use App\Http\Controllers\ArchivoController;
 use App\Http\Controllers\DashboardController;
+use App\Livewire\Consumibles\Consumible;
 use App\Livewire\Contracts\Contract;
 use App\Livewire\Contracts\ContractShow;
 use App\Livewire\Incidences\Incidence;
 use App\Livewire\Inventory\Inventory;
+use App\Livewire\Mantenimientos\Mantenimiento;
+use App\Livewire\Maquinas\Maquina;
 use App\Livewire\Patients\Patient;
+use App\Livewire\Reportes\Reporte;
 use App\Livewire\Users\User;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
@@ -32,6 +36,10 @@ Route::middleware(['auth', 'verified', 'web'])->group(function () {
     Route::get('/inventory', Inventory::class)->name('inventory.index');
     Route::get('/contracts', Contract::class)->name('contracts.index');
     Route::get('/contract/show/{contract}', ContractShow::class)->name('contracts.show');
+    Route::get('/consumibles', Consumible::class)->name('consumibles.index');
+    Route::get('/mantenimientos', Mantenimiento::class)->name('mantenimientos.index');
+    Route::get('/maquinas', Maquina::class)->name('maquinas.index');
+    Route::get('/reportes', Reporte::class)->name('reportes.index');
 });
 
 // Rutas de verificación de correo electrónico.
