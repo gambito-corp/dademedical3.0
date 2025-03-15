@@ -17,7 +17,7 @@
         <!-- Styles -->
         @livewireStyles
     </head>
-    <body class="font-sans antialiased @isset($body) {{$body}} @endisset">
+    <body class="font-sans antialiased @stack('body-classes')">
         <x-banner />
 
         <div class="min-h-screen bg-gray-100 flex flex-col">

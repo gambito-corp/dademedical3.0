@@ -17,7 +17,7 @@
         <!-- Styles -->
         @livewireStyles
     </head>
-    <body>
+    <body class="font-sans antialiased @stack('body-classes')">
         <div class="font-sans text-gray-900 antialiased">
             {{ $slot }}
         </div>
